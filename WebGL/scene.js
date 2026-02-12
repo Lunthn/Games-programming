@@ -5,86 +5,86 @@ const textureLoader = new THREE.TextureLoader();
 const skyTexture = textureLoader.load("Fuzzy_Sky-Blue_01-1024x512.png");
 skyTexture.mapping = THREE.EquirectangularReflectionMapping;
 scene.background = skyTexture;
+
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   3000,
 );
-camera.position.set(0, 2, -2);
-
-const clock = new THREE.Clock();
+camera.position.set(0, 5, -10);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI / 2 - 0.05;
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(100, 100, -50);
-directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+let { sun, light } = entityBuilder.buildSun();
+scene.add(sun, light);
 
-scene.add(directionalLight);
-
-const groundGeometry = new THREE.PlaneGeometry(200, 200);
-const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x6b8e23 });
-const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20),
+  new THREE.MeshStandardMaterial({ color: 0x6b8e23 }),
+);
 ground.rotation.x = -Math.PI / 2;
-ground.position.y = 0;
 ground.receiveShadow = true;
 scene.add(ground);
 
-for (let i = -3; i < 4; i += 2) {
-  let house = entityBuilder.buildHouse();
-  house.position.set(i, 0, -3);
-  house.rotation.y = Math.PI;
-  scene.add(house);
-
-  let house2 = entityBuilder.buildHouse();
+for (let i = -4; i < 5; i += 2) {
+  const house1 = entityBuilder.buildHouse();
+  house1.position.set(i, 0, -3);
+  house1.rotation.y = Math.PI;
+  const house2 = entityBuilder.buildHouse();
   house2.position.set(i, 0, 3);
-  scene.add(house2);
-
-  let tree = entityBuilder.buildTree();
-  let x = 1 + (Math.random() - 0.5) * 0.5;
-  let y = (Math.random() - 0.5) * 1.5;
-
-  tree.position.set(i + x, 0, -1.5 + y);
-  scene.add(tree);
-
-  let tree2 = entityBuilder.buildTree();
-  let x2 = -1 + (Math.random() - 0.5) * 0.5;
-  let y2 = (Math.random() - 0.5) * 1.5;
-
-  tree2.position.set(i + x, 0, 1.5 + y);
-  scene.add(tree2);
-
-  let fireHydrant = entityBuilder.buildFireHydrant();
-  fireHydrant.position.set(i + 0.8, 0.05, -0.8);
-  scene.add(fireHydrant);
+  const tree1 = entityBuilder.buildTree();
+  tree1.position.set(
+    i + 1 + (Math.random() - 0.5) * 0.5,
+    0,
+    -1.5 + (Math.random() - 0.5) * 1.5,
+  );
+  const tree2 = entityBuilder.buildTree();
+  tree2.position.set(
+    i - 1 + (Math.random() - 0.5) * 0.5,
+    0,
+    1.5 + (Math.random() - 0.5) * 1.5,
+  );
+  const hydrant = entityBuilder.buildFireHydrant();
+  hydrant.position.set(i + 0.8, 0.05, -0.8);
+  scene.add(house1, house2, tree1, tree2, hydrant);
 }
 
-let street = entityBuilder.buildStreet(9);
-street.position.set(0, 0, 0);
+const street = entityBuilder.buildStreet(10);
 scene.add(street);
 
-const render = function () {
-  requestAnimationFrame(render);
-  controls.update();
+const orbitRadius = 15;
+const orbitHeight = 10;
+const orbitSpeed = 0.5;
 
-  if (camera.position.y < 0.2) {
-    camera.position.y = 0.2;
-  }
+function render() {
+  requestAnimationFrame(render);
+
+  const time = Date.now() * 0.001 * orbitSpeed;
+
+  const x = Math.cos(time) * orbitRadius;
+  const z = Math.sin(time) * orbitRadius;
+  const y = orbitHeight;
+
+  sun.position.set(x, y, z);
+  light.position.set(x, y, z);
+
+  light.intensity = 0.5;
+
+  if (camera.position.y < 0.2) camera.position.y = 0.2;
+
+  controls.update();
   renderer.render(scene, camera);
-};
+}
 
 render();

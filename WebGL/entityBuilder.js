@@ -128,3 +128,22 @@ export function buildTree() {
   treeGroup.scale.set(0.002, 0.002, 0.002);
   return treeGroup;
 }
+
+export function buildSun() {
+  const sunGeometry = new THREE.SphereGeometry(15, 32, 16);
+  const sunMaterial = new THREE.MeshBasicMaterial({ color: "yellow" });
+  const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+
+  sun.scale.set(0.1, 0.1, 0.1);
+
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.castShadow = true;
+  light.shadow.mapSize.width = 1024;
+  light.shadow.mapSize.height = 1024;
+  light.intensity = 0.9;
+
+  light.position.set(5, 5, -1);
+  sun.position.set(5, 5, -1);
+
+  return { sun, light };
+}
