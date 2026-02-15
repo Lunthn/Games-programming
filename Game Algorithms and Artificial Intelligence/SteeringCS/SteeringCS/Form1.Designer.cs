@@ -62,26 +62,29 @@
             this.panel1.Controls.Add(this.max_velocity_Slider);
             this.panel1.Controls.Add(this.min_velocity_Slider);
             this.panel1.Controls.Add(this.showVectorCheckBox);
-            this.panel1.Location = new System.Drawing.Point(839, 3);
+            this.panel1.Location = new System.Drawing.Point(630, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(384, 960);
+            this.panel1.Size = new System.Drawing.Size(288, 781);
             this.panel1.TabIndex = 10;
             // 
             // nr_of_vehicles_textBox
             // 
             this.nr_of_vehicles_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nr_of_vehicles_textBox.Location = new System.Drawing.Point(116, 342);
+            this.nr_of_vehicles_textBox.Location = new System.Drawing.Point(87, 278);
+            this.nr_of_vehicles_textBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.nr_of_vehicles_textBox.Name = "nr_of_vehicles_textBox";
-            this.nr_of_vehicles_textBox.Size = new System.Drawing.Size(235, 30);
+            this.nr_of_vehicles_textBox.Size = new System.Drawing.Size(177, 26);
             this.nr_of_vehicles_textBox.TabIndex = 42;
             this.nr_of_vehicles_textBox.Text = "3";
             // 
             // restart_button
             // 
             this.restart_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.restart_button.Location = new System.Drawing.Point(5, 339);
+            this.restart_button.Location = new System.Drawing.Point(4, 275);
+            this.restart_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.restart_button.Name = "restart_button";
-            this.restart_button.Size = new System.Drawing.Size(93, 34);
+            this.restart_button.Size = new System.Drawing.Size(70, 28);
             this.restart_button.TabIndex = 41;
             this.restart_button.Text = "restart";
             this.restart_button.UseVisualStyleBackColor = true;
@@ -89,22 +92,20 @@
             // 
             // gravity_checkBox
             // 
-            this.gravity_checkBox.AutoSize = true;
-            this.gravity_checkBox.Location = new System.Drawing.Point(5, 206);
+            this.gravity_checkBox.Location = new System.Drawing.Point(0, 0);
+            this.gravity_checkBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gravity_checkBox.Name = "gravity_checkBox";
-            this.gravity_checkBox.Size = new System.Drawing.Size(102, 20);
-            this.gravity_checkBox.TabIndex = 40;
-            this.gravity_checkBox.Text = "seek gravity";
-            this.gravity_checkBox.UseVisualStyleBackColor = true;
-            this.gravity_checkBox.CheckedChanged += new System.EventHandler(this.gravity_checkBox_CheckedChanged);
+            this.gravity_checkBox.Size = new System.Drawing.Size(78, 20);
+            this.gravity_checkBox.TabIndex = 43;
             // 
             // Newton_percentage_Slider
             // 
-            this.Newton_percentage_Slider.Location = new System.Drawing.Point(3, 242);
+            this.Newton_percentage_Slider.Location = new System.Drawing.Point(2, 197);
+            this.Newton_percentage_Slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Newton_percentage_Slider.Maximum = 100;
             this.Newton_percentage_Slider.Minimum = 0;
             this.Newton_percentage_Slider.Name = "Newton_percentage_Slider";
-            this.Newton_percentage_Slider.Size = new System.Drawing.Size(348, 67);
+            this.Newton_percentage_Slider.Size = new System.Drawing.Size(261, 54);
             this.Newton_percentage_Slider.TabIndex = 39;
             this.Newton_percentage_Slider.Title = "txt";
             this.Newton_percentage_Slider.Value = 0;
@@ -112,9 +113,10 @@
             // stepButton
             // 
             this.stepButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stepButton.Location = new System.Drawing.Point(266, 177);
+            this.stepButton.Location = new System.Drawing.Point(200, 144);
+            this.stepButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.stepButton.Name = "stepButton";
-            this.stepButton.Size = new System.Drawing.Size(85, 49);
+            this.stepButton.Size = new System.Drawing.Size(64, 40);
             this.stepButton.TabIndex = 23;
             this.stepButton.Text = "||  |>";
             this.stepButton.UseVisualStyleBackColor = true;
@@ -123,9 +125,10 @@
             // Play_button
             // 
             this.Play_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Play_button.Location = new System.Drawing.Point(183, 177);
+            this.Play_button.Location = new System.Drawing.Point(137, 144);
+            this.Play_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Play_button.Name = "Play_button";
-            this.Play_button.Size = new System.Drawing.Size(77, 49);
+            this.Play_button.Size = new System.Drawing.Size(58, 40);
             this.Play_button.TabIndex = 22;
             this.Play_button.Text = "|>";
             this.Play_button.UseVisualStyleBackColor = true;
@@ -133,22 +136,24 @@
             // 
             // max_velocity_Slider
             // 
-            this.max_velocity_Slider.Location = new System.Drawing.Point(5, 93);
+            this.max_velocity_Slider.Location = new System.Drawing.Point(4, 76);
+            this.max_velocity_Slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.max_velocity_Slider.Maximum = 100;
             this.max_velocity_Slider.Minimum = 0;
             this.max_velocity_Slider.Name = "max_velocity_Slider";
-            this.max_velocity_Slider.Size = new System.Drawing.Size(346, 64);
+            this.max_velocity_Slider.Size = new System.Drawing.Size(260, 52);
             this.max_velocity_Slider.TabIndex = 21;
             this.max_velocity_Slider.Title = "txt";
             this.max_velocity_Slider.Value = 0;
             // 
             // min_velocity_Slider
             // 
-            this.min_velocity_Slider.Location = new System.Drawing.Point(3, 14);
+            this.min_velocity_Slider.Location = new System.Drawing.Point(2, 11);
+            this.min_velocity_Slider.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.min_velocity_Slider.Maximum = 100;
             this.min_velocity_Slider.Minimum = 0;
             this.min_velocity_Slider.Name = "min_velocity_Slider";
-            this.min_velocity_Slider.Size = new System.Drawing.Size(348, 66);
+            this.min_velocity_Slider.Size = new System.Drawing.Size(261, 54);
             this.min_velocity_Slider.TabIndex = 19;
             this.min_velocity_Slider.Title = "txt";
             this.min_velocity_Slider.Value = 0;
@@ -156,13 +161,14 @@
             // showVectorCheckBox
             // 
             this.showVectorCheckBox.AutoSize = true;
-            this.showVectorCheckBox.Location = new System.Drawing.Point(5, 180);
+            this.showVectorCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showVectorCheckBox.Location = new System.Drawing.Point(4, 158);
+            this.showVectorCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.showVectorCheckBox.Name = "showVectorCheckBox";
-            this.showVectorCheckBox.Size = new System.Drawing.Size(126, 20);
+            this.showVectorCheckBox.Size = new System.Drawing.Size(104, 17);
             this.showVectorCheckBox.TabIndex = 17;
             this.showVectorCheckBox.Text = "show debug info";
             this.showVectorCheckBox.UseVisualStyleBackColor = true;
-            this.showVectorCheckBox.Checked = true;
             this.showVectorCheckBox.CheckedChanged += new System.EventHandler(this.ShowVectorCheckBox_CheckedChanged);
             // 
             // tableLayoutPanel1
@@ -170,16 +176,17 @@
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 390F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 292F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.dbPanel1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 966F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1226, 966);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 785F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(920, 785);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // dbPanel1
@@ -187,21 +194,19 @@
             this.dbPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.dbPanel1.BackColor = System.Drawing.Color.White;
             this.dbPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dbPanel1.Location = new System.Drawing.Point(4, 4);
-            this.dbPanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.dbPanel1.Location = new System.Drawing.Point(3, 3);
             this.dbPanel1.Name = "dbPanel1";
-            this.dbPanel1.Size = new System.Drawing.Size(828, 958);
+            this.dbPanel1.Size = new System.Drawing.Size(622, 779);
             this.dbPanel1.TabIndex = 0;
             this.dbPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.DbPanel1_Paint);
             this.dbPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DbPanel1_MouseClick);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1226, 966);
+            this.ClientSize = new System.Drawing.Size(920, 785);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Steering";
             this.Load += new System.EventHandler(this.Form1_Load);

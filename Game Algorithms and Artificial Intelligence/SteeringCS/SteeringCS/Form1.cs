@@ -29,7 +29,6 @@ namespace SteeringCS
             this.min_velocity_Slider.Init(this, "min. velocity", 0, 1000, (int)(this.world.Min_velocity_in_pixels));
             this.max_velocity_Slider.Init(this, "max. velocity", 0, 1000, (int)(this.world.Max_velocity_in_pixels));
             this.Newton_percentage_Slider.Init(this, "Newton (inertia) %", 75, 100, this.world.Newton_percentage);
-            this.gravity_checkBox.Checked = world.Seek_force_like_gravity;
 
             this.Resize += new System.EventHandler(this.ResizeForm_Resize);
 
@@ -118,11 +117,6 @@ namespace SteeringCS
         private void ShowVectorCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             world.Show_debug_info = showVectorCheckBox.Checked;
-        }
-
-        private void gravity_checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            world.Seek_force_like_gravity = gravity_checkBox.Checked;
         }
 
         private void restart_button_Click(object sender, EventArgs e)

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="behaviours\Seek_Behaviour.cs" />
+    <Compile Include="behaviours\Wandering_Behaviour.cs" />
     <Compile Include="util\Double_buffered_Panel.cs">
       <SubType>Component</SubType>
     </Compile>

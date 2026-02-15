@@ -3,44 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\world\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\world\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\entities\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\entities\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\behaviours\\seek_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\behaviours\\seek_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\util\\imysliderlistener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\util\\imysliderlistener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\math\\vector_2d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\math\\vector_2d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\util\\my_base_thread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\util\\my_base_thread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\behaviours\\steering_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\behaviours\\steering_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|c:\\users\\nrlup\\desktop\\games-programming\\game algorithms and artificial intelligence\\steeringcs\\steeringcs\\behaviours\\wandering_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD179484-1369-4437-BD3B-4AECFB627286}|SteeringCS\\Simulation.csproj|solutionrelative:steeringcs\\behaviours\\wandering_behaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,135 +18,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Form1.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.Designer.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\Form1.Designer.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.Designer.cs",
-              "RelativeToolTip": "SteeringCS\\Form1.Designer.cs",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAowKEAAAAyAAAAAAAAAA==",
+              "Title": "Wandering_Behaviour.cs",
+              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Wandering_Behaviour.cs",
+              "RelativeDocumentMoniker": "SteeringCS\\behaviours\\Wandering_Behaviour.cs",
+              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Wandering_Behaviour.cs",
+              "RelativeToolTip": "SteeringCS\\behaviours\\Wandering_Behaviour.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowBkAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:10:13.228Z",
+              "WhenOpened": "2026-02-15T13:43:33.124Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "My_base_thread.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\util\\My_base_thread.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\util\\My_base_thread.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\util\\My_base_thread.cs",
-              "RelativeToolTip": "SteeringCS\\util\\My_base_thread.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:20:45.575Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "IMySliderListener.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\util\\IMySliderListener.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\util\\IMySliderListener.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\util\\IMySliderListener.cs",
-              "RelativeToolTip": "SteeringCS\\util\\IMySliderListener.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:20:44.758Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Vector_2D.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\math\\Vector_2D.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\math\\Vector_2D.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\math\\Vector_2D.cs",
-              "RelativeToolTip": "SteeringCS\\math\\Vector_2D.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:18:25.551Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\Form1.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.cs",
-              "RelativeToolTip": "SteeringCS\\Form1.cs",
-              "ViewState": "AgIAAFsAAAAAAAAAAAAwwHoAAABQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:09:59.548Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\Form1.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\Form1.cs [Design]",
-              "RelativeToolTip": "SteeringCS\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:09:54.284Z",
-              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "World.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\world\\World.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\world\\World.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\world\\World.cs",
-              "RelativeToolTip": "SteeringCS\\world\\World.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:08:43.881Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "Vehicle.cs",
               "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\entities\\Vehicle.cs",
               "RelativeDocumentMoniker": "SteeringCS\\entities\\Vehicle.cs",
               "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\entities\\Vehicle.cs",
               "RelativeToolTip": "SteeringCS\\entities\\Vehicle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAwwL4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:06:42.571Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Seek_Behaviour.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Seek_Behaviour.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\behaviours\\Seek_Behaviour.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Seek_Behaviour.cs",
-              "RelativeToolTip": "SteeringCS\\behaviours\\Seek_Behaviour.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:05:25.971Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Steering_Behaviour.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Steering_Behaviour.cs",
-              "RelativeDocumentMoniker": "SteeringCS\\behaviours\\Steering_Behaviour.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Game Algorithms and Artificial Intelligence\\SteeringCS\\SteeringCS\\behaviours\\Steering_Behaviour.cs",
-              "RelativeToolTip": "SteeringCS\\behaviours\\Steering_Behaviour.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T11:05:22.727Z",
+              "WhenOpened": "2026-02-15T13:36:41.423Z",
               "EditorCaption": ""
             }
           ]

@@ -8,22 +8,24 @@ using SteeringCS.behaviour;
 
 namespace SteeringCS.entity
 {
-    /*
-     * simple vehicle with behaviours
-     */
-
     public class Vehicle
     {
         public World MyWorld { get; set; }
         public Vector_2D Pos { get; set; }
         public string Name { get; set; }
         public bool Active { get; set; }
-        public Vector_2D Direction { get; set; } // vector with length 1
-        public Vector_2D Velocity { get; set; }// in pixel per sec.
+        public Vector_2D Direction { get; set; }
+        public Vector_2D Velocity { get; set; }
         public virtual double Maximum_Velocity_in_pixels_per_second { get; set; }
         public virtual double Minimum_Velocity_in_pixels_per_second { get; set; }
 
         public bool Show_debug_info { get; set; }
+        public List<Steering_Behaviour> SteeringBehaviourList { get; set; }
+
+        private Seek_Behaviour _seekBehaviour;
+
+        public Vector_2D Seek_target
+        { get { return _seekBehaviour.Target; } set { _seekBehaviour.Target = value; } }
 
         public Vehicle(World world, string name, Vector_2D pos, Vector_2D vel = null)
         {
@@ -44,22 +46,13 @@ namespace SteeringCS.entity
 
             AccelerationVector_forRendering = new Vector_2D();
 
-            // behaviours:
             SteeringBehaviourList = new List<Steering_Behaviour>();
 
             _seekBehaviour = new Seek_Behaviour(this);
             SteeringBehaviourList.Add(_seekBehaviour);
+
+            SteeringBehaviourList.Add(new Wandering_Behaviour(this));
         }
-
-        //---------------- behaviours ------------------
-        public List<Steering_Behaviour> SteeringBehaviourList { get; set; }
-
-        private Seek_Behaviour _seekBehaviour;
-
-        public Vector_2D Seek_target
-        { get { return _seekBehaviour.Target; } set { _seekBehaviour.Target = value; } }
-
-        // etc ...
 
         public Vector_2D AccelerationVector_forRendering { get; set; }
 
@@ -67,8 +60,6 @@ namespace SteeringCS.entity
         {
             return Name + "<pos:" + this.Pos.X.ToString("F0") + "," + this.Pos.Y.ToString("F0") + " v: " + this.Velocity + ">";
         }
-
-        public bool Seek_force_like_gravity { get; set; }
 
         public virtual void UpdateSimulation(double timeElapsed_in_ms)
         {
@@ -80,7 +71,6 @@ namespace SteeringCS.entity
             //     return;
             // }
 
-            // calc new velocity
             Vector_2D force_vector = new Vector_2D();
 
             foreach (Steering_Behaviour sb in SteeringBehaviourList)
@@ -89,12 +79,6 @@ namespace SteeringCS.entity
                 force_vector.Add(force);
             }
 
-            // force to acceleration, some physics:
-            //       F = mass * acc --> acc = F/mass.
-            //
-            // This would mean that heavier vehicles respond slower.
-            // It's basically a tuning factor
-            //
             double mass = 30; // bigger: slower response
             force_vector.Divide(mass);
 
@@ -106,9 +90,7 @@ namespace SteeringCS.entity
 
             if (Velocity.Is_length_zero())
             {
-                // vehicle is not allowed to stand still ... that would be boring
-                // and might lead to complications in future calculations.
-                //
+                // vehicle is not allowed to stand still
                 Velocity = Direction.Clone();
                 Velocity.Multiply(Minimum_Velocity_in_pixels_per_second);
             }
@@ -122,8 +104,6 @@ namespace SteeringCS.entity
             Vector_2D delta = Vector_2D.Multiply(Velocity, timeElapsed_in_ms / 1000.0);
 
             this.Pos.Add(delta);
-
-            // ---- check colisions: ----
 
             // if( colliding with something ) {
             //      do something, like an explosion, calculate a new direction or just stop the vehicle ... ?
@@ -174,8 +154,10 @@ namespace SteeringCS.entity
 
             if (Show_debug_info)
             {
-                // this behaviour has a fairly boring render, just a line to the target.
-                _seekBehaviour.Render_for_Debug(g);
+                foreach(Steering_Behaviour sb in SteeringBehaviourList)
+                {
+                    sb.Render_for_Debug(g);
+                }
 
                 // if (.... path following ....) { ... show path ... }
 
@@ -189,6 +171,21 @@ namespace SteeringCS.entity
 
                 double scale2 = 10;
                 g.DrawLine(new Pen(Color.Orange, 2), (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(AccelerationVector_forRendering.X * scale2), (int)Pos.Y + (int)(AccelerationVector_forRendering.Y * scale2));
+
+                Font debugFont = new Font("Arial", 8);
+                float textYOffset = 40; 
+
+                g.DrawString("Active Steering Behaviours:", new Font(debugFont, FontStyle.Bold), Brushes.Black, (float)Pos.X, (float)Pos.Y + textYOffset);
+
+                for (int i = 0; i < SteeringBehaviourList.Count; i++)
+                {
+                    textYOffset += 15;
+                    string behaviorName = SteeringBehaviourList[i].GetType().Name; 
+
+                    g.DrawString(behaviorName, debugFont, Brushes.DarkSlateGray, (float)Pos.X, (float)Pos.Y + textYOffset);
+                }
+
+
             }
         }
     }
