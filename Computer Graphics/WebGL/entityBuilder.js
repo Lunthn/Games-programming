@@ -198,9 +198,9 @@ export function buildMonument() {
   });
 
   monumentGroup.userData.update = (time) => {
-    art.rotation.x += 0.05;
-    art.rotation.y -= 0.05;
-    art.rotation.z -= 0.05;
+    art.rotation.x += 0.01;
+    art.rotation.y -= 0.01;
+    art.rotation.z -= 0.01;
   };
 
   monumentGroup.scale.setScalar(0.3);
@@ -208,16 +208,16 @@ export function buildMonument() {
   return monumentGroup;
 }
 
-export function buildGround() {
+export function buildGround(boundary) {
   // create top layer (grass)
   const grass = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 0.25, 20),
+    new THREE.BoxGeometry(boundary * 2 + 1, 0.25, boundary * 2 + 1),
     new THREE.MeshStandardMaterial({ color: 0x6b8e23 }),
   );
 
   // create bottom layer (ground)
   const ground = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 0.5, 20),
+    new THREE.BoxGeometry(boundary * 2 + 1, 0.5, boundary * 2 + 1),
     new THREE.MeshStandardMaterial({ color: 0x654321 }),
   );
 
