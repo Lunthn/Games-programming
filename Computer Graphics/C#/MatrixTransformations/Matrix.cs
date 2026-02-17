@@ -80,8 +80,21 @@ namespace MatrixTransformations
 
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
+            int size = m1.mat.GetLength(0);
             Matrix result = new Matrix();
 
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    float sum = 0;
+                    for (int k = 0; k < size; k++)
+                    {
+                        sum += m1.mat[i, k] * m2.mat[k, j];
+                    }
+                    result.mat[i, j] = sum;
+                }
+            }
             return result;
         }
 
@@ -118,6 +131,21 @@ namespace MatrixTransformations
             }
 
             return result.ToString();
+        }
+
+        public static Matrix ScaleMatrix(float scalar)
+        {
+            return scalar * Identity();
+        }
+
+        public static Matrix RotateMatrix(float degrees)
+        {
+            double rad = (Math.PI / 180) * degrees;
+
+            float sin = (float)Math.Sin(rad);
+            float cos = (float)Math.Cos(rad);
+
+            return new Matrix(cos, -sin, sin, cos);
         }
     }
 }

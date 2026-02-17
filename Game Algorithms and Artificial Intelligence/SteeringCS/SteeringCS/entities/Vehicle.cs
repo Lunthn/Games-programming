@@ -22,10 +22,10 @@ namespace SteeringCS.entity
         public bool Show_debug_info { get; set; }
         public List<Steering_Behaviour> SteeringBehaviourList { get; set; }
 
-        private Seek_Behaviour _seekBehaviour;
+        private Arrive_Behaviour _arriveBehaviour;
 
-        public Vector_2D Seek_target
-        { get { return _seekBehaviour.Target; } set { _seekBehaviour.Target = value; } }
+        public Vector_2D Arrive_target
+        { get { return _arriveBehaviour.Target; } set { _arriveBehaviour.Target = value; } }
 
         public Vehicle(World world, string name, Vector_2D pos, Vector_2D vel = null)
         {
@@ -48,10 +48,8 @@ namespace SteeringCS.entity
 
             SteeringBehaviourList = new List<Steering_Behaviour>();
 
-            _seekBehaviour = new Seek_Behaviour(this);
-            SteeringBehaviourList.Add(_seekBehaviour);
-
-            SteeringBehaviourList.Add(new Wandering_Behaviour(this));
+            _arriveBehaviour = new Arrive_Behaviour(this);
+            SteeringBehaviourList.Add(_arriveBehaviour);
         }
 
         public Vector_2D AccelerationVector_forRendering { get; set; }
@@ -65,12 +63,6 @@ namespace SteeringCS.entity
         {
             if (!Active) { return; }
 
-            //if ( ..... this vehicle needs to be removed/killed ? ..... )
-            // {
-            //     some cleanup
-            //     return;
-            // }
-
             Vector_2D force_vector = new Vector_2D();
 
             foreach (Steering_Behaviour sb in SteeringBehaviourList)
@@ -79,35 +71,21 @@ namespace SteeringCS.entity
                 force_vector.Add(force);
             }
 
-            double mass = 30; // bigger: slower response
+            double mass = 10; // bigger: slower response
             force_vector.Divide(mass);
 
             AccelerationVector_forRendering = force_vector.Clone();
 
-            // newton innertia, use current velocity for new velocity
             Velocity.Multiply(MyWorld.Newton_percentage / 100.0);
             Velocity.Add(force_vector);
 
-            if (Velocity.Is_length_zero())
-            {
-                // vehicle is not allowed to stand still
-                Velocity = Direction.Clone();
-                Velocity.Multiply(Minimum_Velocity_in_pixels_per_second);
-            }
-            else
-            {
-                Direction = Vector_2D.Normalize(Velocity);
-                Velocity.Clamp_to_length(Minimum_Velocity_in_pixels_per_second, Maximum_Velocity_in_pixels_per_second);
-            }
+            Direction = Vector_2D.Normalize(Velocity);
+            Velocity.Clamp_to_length(Minimum_Velocity_in_pixels_per_second, Maximum_Velocity_in_pixels_per_second);
 
             // calc distance traveled based on speed and time:
             Vector_2D delta = Vector_2D.Multiply(Velocity, timeElapsed_in_ms / 1000.0);
 
             this.Pos.Add(delta);
-
-            // if( colliding with something ) {
-            //      do something, like an explosion, calculate a new direction or just stop the vehicle ... ?
-            // }
         }
 
         public virtual void Render(Graphics g)
@@ -138,23 +116,21 @@ namespace SteeringCS.entity
 
              */
 
-            // small distance in front of Pos:
             Vector_2D front = Pos.Clone().Add(Direction.Clone().Scale_to_Length(50));
-            // small distance to the back and to the left:
+
             Vector_2D back_left = Pos.Clone().Add(Direction.Clone().Rotate_90_degrees_clockwise().Scale_to_Length(15))
                                             .Add(Direction.Clone().Scale_to_Length(-25));
-            // small distance to the back and to the  right:
             Vector_2D back_right = Pos.Clone().Add(Direction.Clone().Rotate_90_degrees_counter_clockwise().Scale_to_Length(15))
                                             .Add(Direction.Clone().Scale_to_Length(-25));
 
             PointF[] points = { new PointF( (float) front.X, (float) front.Y),
                                 new PointF( (float) back_left.X, (float) back_left.Y),
                                 new PointF( (float) back_right.X, (float) back_right.Y) };
-            g.FillPolygon(Brushes.YellowGreen, points);
+            g.FillPolygon(Brushes.Gray, points);
 
             if (Show_debug_info)
             {
-                foreach(Steering_Behaviour sb in SteeringBehaviourList)
+                foreach (Steering_Behaviour sb in SteeringBehaviourList)
                 {
                     sb.Render_for_Debug(g);
                 }
@@ -163,29 +139,24 @@ namespace SteeringCS.entity
 
                 // if (... some fancy behaviour ... ) { show debug info for behaviour ... }
 
-                // etc...
-
-                // some lines for velocity and acceleration (force)
-                double scale_for_debug = 0.3; // some suitable scaling factor
+                double scale_for_debug = 0.3;
                 g.DrawLine(new Pen(Color.Red, 7), (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * scale_for_debug), (int)Pos.Y + (int)(Velocity.Y * scale_for_debug));
 
                 double scale2 = 10;
                 g.DrawLine(new Pen(Color.Orange, 2), (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(AccelerationVector_forRendering.X * scale2), (int)Pos.Y + (int)(AccelerationVector_forRendering.Y * scale2));
 
                 Font debugFont = new Font("Arial", 8);
-                float textYOffset = 40; 
+                float textYOffset = 40;
 
                 g.DrawString("Active Steering Behaviours:", new Font(debugFont, FontStyle.Bold), Brushes.Black, (float)Pos.X, (float)Pos.Y + textYOffset);
 
                 for (int i = 0; i < SteeringBehaviourList.Count; i++)
                 {
                     textYOffset += 15;
-                    string behaviorName = SteeringBehaviourList[i].GetType().Name; 
+                    string behaviorName = SteeringBehaviourList[i].GetType().Name;
 
                     g.DrawString(behaviorName, debugFont, Brushes.DarkSlateGray, (float)Pos.X, (float)Pos.Y + textYOffset);
                 }
-
-
             }
         }
     }

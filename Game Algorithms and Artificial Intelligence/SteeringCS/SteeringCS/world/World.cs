@@ -105,7 +105,7 @@ namespace SteeringCS
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Vehicle v = new Vehicle(this, "vehicle", pos, vel) { Seek_target = Seek_target };
+                    Vehicle v = new Vehicle(this, "vehicle", pos, vel) { Arrive_target = Seek_target };
                     vehicles_list.Add(v);
                 }
 
