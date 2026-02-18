@@ -6,27 +6,29 @@ namespace MatrixTransformations
 {
     public class Matrix
     {
-        private float[,] mat = new float[3, 3];
+        private float[,] mat = new float[4, 4];
 
-        public Matrix() : this(0, 0, 0, 0)
+        public Matrix() : this(0, 0, 0, 0, 0, 0, 0, 0, 0)
         {
         }
 
-        public Matrix(float m11, float m12,
-                      float m21, float m22)
+        public Matrix(float m11, float m12, float m13,
+                      float m21, float m22, float m23,
+                      float m31, float m32, float m33)
         {
-            mat[0, 0] = m11; mat[0, 1] = m12; mat[0, 2] = 0;
-            mat[1, 0] = m21; mat[1, 1] = m22; mat[1, 2] = 0;
-            mat[2, 0] = 0; mat[2, 1] = 0; mat[2, 2] = 1;
+            mat[0, 0] = m11; mat[0, 1] = m12; mat[0, 2] = m13; mat[0, 3] = 0;
+            mat[1, 0] = m21; mat[1, 1] = m22; mat[1, 2] = m23; mat[1, 3] = 0;
+            mat[2, 0] = m31; mat[2, 1] = m32; mat[2, 2] = m33; mat[2, 3] = 0;
+            mat[3, 0] = 0; mat[3, 1] = 0; mat[3, 2] = 0; mat[3, 3] = 1;
         }
 
-        public Matrix(Vector v) : this(v.x, 0, v.y, 0)
+        public Matrix(Vector v) : this(v.x, 0, 0, v.y, 0, 0, v.z, 0, 0)
         {
         }
 
         public Vector ToVector()
         {
-            return new Vector(mat[0, 0], mat[1, 0]);
+            return new Vector(mat[0, 0], mat[1, 0], mat[2, 0]);
         }
 
         public static Matrix operator +(Matrix m1, Matrix m2)
@@ -102,8 +104,9 @@ namespace MatrixTransformations
         public static Vector operator *(Matrix m, Vector v)
         {
             return new Vector(
-                m.mat[0, 0] * v.x + m.mat[0, 1] * v.y + m.mat[0, 2] * v.w,
-                m.mat[1, 0] * v.x + m.mat[1, 1] * v.y + m.mat[1, 2] * v.w
+                m.mat[0, 0] * v.x + m.mat[0, 1] * v.y + m.mat[0, 2] * v.z + m.mat[0, 3] * v.w,
+                m.mat[1, 0] * v.x + m.mat[1, 1] * v.y + m.mat[1, 2] * v.z + m.mat[1, 3] * v.w,
+                m.mat[2, 0] * v.x + m.mat[2, 1] * v.y + m.mat[2, 2] * v.z + m.mat[2, 3] * v.w
             );
         }
 
@@ -141,24 +144,26 @@ namespace MatrixTransformations
             Matrix result = Identity();
             result.mat[0, 0] = scalar;
             result.mat[1, 1] = scalar;
+            result.mat[2, 2] = scalar;
             return result;
         }
 
-        public static Matrix RotateMatrix(float degrees)
-        {
-            double rad = (Math.PI / 180) * degrees;
+        //public static Matrix RotateMatrix(float degrees)
+        //{
+        //    double rad = (Math.PI / 180) * degrees;
 
-            float sin = (float)Math.Sin(rad);
-            float cos = (float)Math.Cos(rad);
+        //    float sin = (float)Math.Sin(rad);
+        //    float cos = (float)Math.Cos(rad);
 
-            return new Matrix(cos, -sin, sin, cos);
-        }
+        //    return new Matrix(cos, -sin, sin, cos);
+        //}
 
-        public static Matrix TranslateMatrix(float x, float y)
+        public static Matrix TranslateMatrix(float x, float y, float z)
         {
             Matrix result = Identity();
-            result.mat[0, 2] = x;
-            result.mat[1, 2] = y;
+            result.mat[0, 3] = x;
+            result.mat[1, 3] = y;
+            result.mat[2, 3] = z;
             return result;
         }
     }
