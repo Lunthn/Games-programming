@@ -6,7 +6,7 @@ namespace MatrixTransformations
 {
     public class Vector
     {
-        public float x, y;
+        public float x, y, w;
 
         public Vector()
         {
@@ -16,6 +16,7 @@ namespace MatrixTransformations
         {
             this.x = x;
             this.y = y;
+            this.w = 1; // translation component
         }
 
         public static Vector operator +(Vector v1, Vector v2)

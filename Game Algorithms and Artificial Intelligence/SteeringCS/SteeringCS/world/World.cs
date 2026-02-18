@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Drawing;
 using System.Threading;
+using SteeringCS.world;
 
 namespace SteeringCS
 {
@@ -18,6 +19,7 @@ namespace SteeringCS
 
         private int Height { get; set; }
         public List<Vehicle> vehicles_list;
+        public List<Wall> walls_list;
         public Vector_2D Seek_target { get; }
 
         private readonly object lock_update_object = new object();
@@ -76,8 +78,6 @@ namespace SteeringCS
             }
         }
 
-        // --- Initialization ---
-        // --- Initialization --
         public World(int w, int h, int update_time_step)
         {
             Set_thread_as_background(true);
@@ -86,9 +86,11 @@ namespace SteeringCS
             Height = h;
 
             vehicles_list = new List<Vehicle>();
+            walls_list = new List<Wall>();
             Seek_target = new Vector_2D(Width / 2, Height / 2);
 
             Populate(3);
+            BuildWalls(5);
         }
 
         private void Populate(int nr_of_entities)
@@ -116,7 +118,28 @@ namespace SteeringCS
             }
         }
 
-        // --- Simulation Logic ---
+        private void BuildWalls(int nr_of_walls)
+        {
+            Random rng = new Random();
+
+            walls_list.Clear();
+
+            for (int i = 0; i < nr_of_walls; i++)
+            {
+                Vector_2D start = new Vector_2D(
+                    rng.NextDouble() * (Width - 2),
+                    rng.NextDouble() * (Height - 2)
+                );
+
+                Vector_2D end = new Vector_2D(
+                    rng.NextDouble() * (Width - 2),
+                    rng.NextDouble() * (Height - 2)
+                );
+
+                walls_list.Add(new Wall(start, end));
+            }
+        }
+
         public void Update_simulation()
         {
             lock (lock_update_object)
@@ -195,6 +218,7 @@ namespace SteeringCS
             try
             {
                 foreach (Vehicle v in vehicles_list) v.Render(g);
+                foreach (Wall w in walls_list) w.Render(g);
             }
             catch { /* Ignore collection sync issues during render */ }
 

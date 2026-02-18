@@ -19,10 +19,11 @@ namespace MatrixTransformations
 
         private Square cyan_square;
         private Square orange_square;
+        private Square darkblue_square;
 
         private float scalar;
-
         private float rotation;
+        private float translationX, translationY;
 
         public Form1()
         {
@@ -32,8 +33,10 @@ namespace MatrixTransformations
             this.Height = HEIGHT;
             this.DoubleBuffered = true;
 
-            this.rotation = 20f;
-            this.scalar = 1.5f;
+            this.rotation = 0f;
+            this.scalar = 1f;
+            this.translationX = 0f;
+            this.translationY = 0f;
 
             // Define axes
             x_axis = new AxisX(200);
@@ -43,6 +46,7 @@ namespace MatrixTransformations
             square = new Square(Color.Purple, 100);
             cyan_square = new Square(Color.Cyan, 100);
             orange_square = new Square(Color.Orange, 100);
+            darkblue_square = new Square(Color.DarkBlue, 100);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -56,7 +60,22 @@ namespace MatrixTransformations
             List<Vector> vb = new List<Vector>();
 
             var scaleMatrix = Matrix.ScaleMatrix(scalar);
+            var rotateMatrix = Matrix.RotateMatrix(rotation);
+            var translationMatrix = Matrix.TranslateMatrix(translationX, translationY);
 
+            foreach (Vector v in square.vertexbuffer)
+            {
+                Vector v2 = scaleMatrix * v;
+                v2 = rotateMatrix * v2;
+                v2 = translationMatrix * v2;
+                vb.Add(v2);
+            }
+
+            square.Draw(e.Graphics, ViewportTransformation(vb));
+
+            vb.Clear();
+
+            scaleMatrix = Matrix.ScaleMatrix(1.5f);
             foreach (Vector v in square.vertexbuffer)
             {
                 Vector v2 = scaleMatrix * v;
@@ -67,8 +86,7 @@ namespace MatrixTransformations
 
             vb.Clear();
 
-            var rotateMatrix = Matrix.RotateMatrix(rotation);
-
+            rotateMatrix = Matrix.RotateMatrix(20f);
             foreach (Vector v in square.vertexbuffer)
             {
                 Vector v2 = rotateMatrix * v;
@@ -77,8 +95,15 @@ namespace MatrixTransformations
 
             orange_square.Draw(e.Graphics, ViewportTransformation(vb));
 
-            // Draw square
-            square.Draw(e.Graphics, ViewportTransformation(square.vertexbuffer));
+            vb.Clear();
+            translationMatrix = Matrix.TranslateMatrix(75f, -25);
+            foreach (Vector v in square.vertexbuffer)
+            {
+                Vector v2 = translationMatrix * v;
+                vb.Add(v2);
+            }
+
+            darkblue_square.Draw(e.Graphics, ViewportTransformation(vb));
         }
 
         public static List<Vector> ViewportTransformation(List<Vector> vb)
@@ -102,21 +127,37 @@ namespace MatrixTransformations
         {
             if (e.KeyCode == Keys.Escape)
                 Application.Exit();
-            else if (e.KeyCode == Keys.S && e.Shift)
+            else if (e.KeyCode == Keys.W)
             {
-                this.scalar += 0.05f;
+                this.translationY += 5f;
             }
-            else if (e.KeyCode == Keys.S && !e.Shift)
+            else if (e.KeyCode == Keys.S)
             {
-                this.scalar -= 0.05f;
+                this.translationY -= 5f;
             }
-            else if (e.KeyCode == Keys.W && e.Shift)
+            else if (e.KeyCode == Keys.A)
             {
-                this.rotation += 1f;
+                this.translationX -= 5f;
             }
-            else if (e.KeyCode == Keys.W && !e.Shift)
+            else if (e.KeyCode == Keys.D)
             {
-                this.rotation -= 1f;
+                this.translationX += 5f;
+            }
+            else if (e.KeyCode == Keys.Q)
+            {
+                this.rotation -= 5f;
+            }
+            else if (e.KeyCode == Keys.E)
+            {
+                this.rotation += 5f;
+            }
+            else if (e.KeyCode == Keys.Z)
+            {
+                this.scalar += 0.1f;
+            }
+            else if (e.KeyCode == Keys.X)
+            {
+                this.scalar -= 0.1f;
             }
 
             Invalidate();

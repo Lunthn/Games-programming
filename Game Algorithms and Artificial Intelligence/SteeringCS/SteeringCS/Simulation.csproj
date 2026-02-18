@@ -73,6 +73,7 @@
     <Compile Include="behaviours\Steering_Behaviour.cs" />
     <Compile Include="util\My_base_thread.cs" />
     <Compile Include="math\Vector_2D.cs" />
+    <Compile Include="world\Wall.cs" />
     <Compile Include="world\World.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

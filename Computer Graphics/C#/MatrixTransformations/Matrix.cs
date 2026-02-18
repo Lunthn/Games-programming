@@ -6,7 +6,7 @@ namespace MatrixTransformations
 {
     public class Matrix
     {
-        private float[,] mat = new float[2, 2];
+        private float[,] mat = new float[3, 3];
 
         public Matrix() : this(0, 0, 0, 0)
         {
@@ -15,8 +15,9 @@ namespace MatrixTransformations
         public Matrix(float m11, float m12,
                       float m21, float m22)
         {
-            mat[0, 0] = m11; mat[0, 1] = m12;
-            mat[1, 0] = m21; mat[1, 1] = m22;
+            mat[0, 0] = m11; mat[0, 1] = m12; mat[0, 2] = 0;
+            mat[1, 0] = m21; mat[1, 1] = m22; mat[1, 2] = 0;
+            mat[2, 0] = 0; mat[2, 1] = 0; mat[2, 2] = 1;
         }
 
         public Matrix(Vector v) : this(v.x, 0, v.y, 0)
@@ -98,10 +99,12 @@ namespace MatrixTransformations
             return result;
         }
 
-        public static Vector operator *(Matrix m1, Vector v)
+        public static Vector operator *(Matrix m, Vector v)
         {
-            Matrix result = m1 * new Matrix(v);
-            return result.ToVector();
+            return new Vector(
+                m.mat[0, 0] * v.x + m.mat[0, 1] * v.y + m.mat[0, 2] * v.w,
+                m.mat[1, 0] * v.x + m.mat[1, 1] * v.y + m.mat[1, 2] * v.w
+            );
         }
 
         public static Matrix Identity()
@@ -135,7 +138,10 @@ namespace MatrixTransformations
 
         public static Matrix ScaleMatrix(float scalar)
         {
-            return scalar * Identity();
+            Matrix result = Identity();
+            result.mat[0, 0] = scalar;
+            result.mat[1, 1] = scalar;
+            return result;
         }
 
         public static Matrix RotateMatrix(float degrees)
@@ -146,6 +152,14 @@ namespace MatrixTransformations
             float cos = (float)Math.Cos(rad);
 
             return new Matrix(cos, -sin, sin, cos);
+        }
+
+        public static Matrix TranslateMatrix(float x, float y)
+        {
+            Matrix result = Identity();
+            result.mat[0, 2] = x;
+            result.mat[1, 2] = y;
+            return result;
         }
     }
 }

@@ -15,24 +15,23 @@ namespace SteeringCS.behaviour
         //return the force
         public override Vector_2D Calculate()
         {
-            if (Target == null) { return new Vector_2D(0,0); }
+            if (Target == null) { return new Vector_2D(0, 0); }
 
             Vector_2D delta = Vector_2D.Subtract(Target, Owner.Pos);
             double distance = delta.Length();
 
             if (distance > 0)
             {
-                double distanceToSlow = 150;
+                double distanceToSlow = 100;
                 double speed = Owner.Maximum_Velocity_in_pixels_per_second * Math.Min(1.0, distance / distanceToSlow);
-                    
+
                 Vector_2D desiredVelocity = delta.Clone();
                 desiredVelocity.Scale_to_Length(speed);
 
                 return Vector_2D.Subtract(desiredVelocity, Owner.Velocity);
             }
-         
 
-            return new Vector_2D(0,0);
+            return new Vector_2D(0, 0);
         }
 
         public override void Render_for_Debug(Graphics g)
