@@ -1,0 +1,113 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace SteeringCS
+{
+    public partial class Form1 : Form, IMySliderListener
+    {
+        private World _world;
+        private System.Timers.Timer _renderTimer;
+
+        public const int UpdateTimestepMs = 11;
+        public const int RenderTimestepMs = 6;
+
+        public Form1()
+        {
+            InitializeComponent();
+            _world = new World(dbPanel1.Width, dbPanel1.Height, UpdateTimestepMs);
+
+            _renderTimer = new System.Timers.Timer();
+            _renderTimer.Elapsed += OnRenderTimerElapsed;
+            _renderTimer.Interval = RenderTimestepMs;
+            _renderTimer.Enabled = true;
+
+            this.min_velocity_Slider.Init(this, "min. velocity", 0, 1000, (int)_world.MinVelocity);
+            this.max_velocity_Slider.Init(this, "max. velocity", 0, 1000, (int)_world.MaxVelocity);
+            this.Newton_percentage_Slider.Init(this, "Newton (inertia) %", 75, 100, _world.InertiaPercentage);
+
+            this.Resize += OnFormResize;
+
+            _world.IsPlaying = true;
+            _world.Start();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Maximized;
+            _world.Populate(3, 10);
+        }
+
+        private void OnFormResize(object sender, EventArgs e)
+        {
+            Invalidate();
+            _world.SetWorldSize(dbPanel1.Width, dbPanel1.Height);
+            _world.ResetPositions(_world.Vehicles.Count);
+        }
+
+        private void Play_Button_Click(object sender, EventArgs e)
+        {
+            _world.IsPlaying = !_world.IsPlaying;
+        }
+
+        private void UpdatePlayButtonText()
+        {
+            Play_button.Text = _world.IsPlaying ? "||" : "|>";
+        }
+
+        private void Step_Button_Click(object sender, EventArgs e)
+        {
+            _world.IsPlaying = false;
+            _world.UpdateSimulation();
+        }
+
+        private void OnRenderTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (dbPanel1.IsHandleCreated)
+            {
+                try
+                {
+                    dbPanel1.Invoke((MethodInvoker)delegate { UpdatePlayButtonText(); });
+                }
+                catch { /* Handle disposal during shutdown */ }
+            }
+            dbPanel1.Invalidate();
+        }
+
+        private void DbPanel1_Paint(object sender, PaintEventArgs e)
+        {
+            _world.Render(e.Graphics);
+        }
+
+        private void DbPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _world.SetTarget(e.X, e.Y);
+            }
+        }
+
+        public void SliderValueChanged(MySlider source, int value)
+        {
+            if (source == min_velocity_Slider) _world.MinVelocity = value;
+            else if (source == max_velocity_Slider) _world.MaxVelocity = value;
+            else if (source == Newton_percentage_Slider) _world.InertiaPercentage = value;
+        }
+
+        private void ShowVectorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _world.ShowDebugInfo = showVectorCheckBox.Checked;
+        }
+
+        private void restart_button_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(nr_of_vehicles_textBox.Text, out int count))
+            {
+                _world.ResetPositions(count);
+            }
+            else
+            {
+                nr_of_vehicles_textBox.Text = "Enter a valid number";
+            }
+        }
+    }
+}

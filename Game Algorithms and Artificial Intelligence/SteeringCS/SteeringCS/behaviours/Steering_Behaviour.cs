@@ -6,9 +6,9 @@ namespace SteeringCS
 {
     public abstract class Steering_Behaviour
     {
-        public Vehicle Owner { get; set; }
+        public Entity Owner { get; set; }
 
-        public Steering_Behaviour(Vehicle v)
+        public Steering_Behaviour(Entity v)
         {
             Owner = v;
         }

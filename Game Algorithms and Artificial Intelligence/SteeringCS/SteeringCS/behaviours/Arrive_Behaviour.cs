@@ -1,6 +1,7 @@
-﻿using SteeringCS.entity;
-using System;
+﻿using System;
 using System.Drawing;
+using SteeringCS.entity;
+using SteeringCS.util;
 
 namespace SteeringCS.behaviour
 {
@@ -8,37 +9,40 @@ namespace SteeringCS.behaviour
     {
         public Vector_2D Target { get; set; }
 
-        public Arrive_Behaviour(Vehicle me) : base(me)
+        public Arrive_Behaviour(Entity me) : base(me)
         {
         }
 
-        //return the force
         public override Vector_2D Calculate()
         {
-            if (Target == null) { return new Vector_2D(0, 0); }
+            if (Target == null) return new Vector_2D(0, 0);
 
-            Vector_2D delta = Vector_2D.Subtract(Target, Owner.Pos);
+            Vector_2D delta = Vector_2D.Subtract(Target, Owner.Position);
             double distance = delta.Length();
 
-            if (distance > 0)
-            {
-                double distanceToSlow = 100;
-                double speed = Owner.Maximum_Velocity_in_pixels_per_second * Math.Min(1.0, distance / distanceToSlow);
+            if (distance <= 0) return new Vector_2D(0, 0);
 
-                Vector_2D desiredVelocity = delta.Clone();
-                desiredVelocity.Scale_to_Length(speed);
+            const double SlowingDistance = 100.0;
+            double speed = Owner.MaxVelocity * Math.Min(1.0, distance / SlowingDistance);
 
-                return Vector_2D.Subtract(desiredVelocity, Owner.Velocity);
-            }
+            Vector_2D desiredVelocity = delta.Clone();
+            desiredVelocity.Scale_to_Length(speed);
 
-            return new Vector_2D(0, 0);
+            return Vector_2D.Subtract(desiredVelocity, Owner.Velocity);
         }
 
         public override void Render_for_Debug(Graphics g)
         {
-            // line from owner to target:
-            Pen p = new Pen(Color.Blue, 3);
-            g.DrawLine(p, (int)Target.X, (int)Target.Y, (int)Owner.Pos.X, (int)Owner.Pos.Y);
+            if (Target == null) return;
+
+            // Draw a line from the vehicle's position to its arrival target
+            using (Pen pen = new Pen(Color.Blue, 2))
+            {
+                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                g.DrawLine(pen,
+                    (int)Owner.Position.X, (int)Owner.Position.Y,
+                    (int)Target.X, (int)Target.Y);
+            }
         }
     }
 }

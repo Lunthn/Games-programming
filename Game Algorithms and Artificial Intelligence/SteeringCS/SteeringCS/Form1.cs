@@ -3,133 +3,128 @@ using System.Windows.Forms;
 
 namespace SteeringCS
 {
-    public partial class Form1 : Form, IMySliderListener
+    public partial class Form1 : Form
     {
-        private World world;
-        private System.Timers.Timer render_timer;
+        private World _world;
+        private System.Timers.Timer _renderTimer;
 
-        public const int update_timestep_in_ms = 11;
-        public const int render_timestep_in_ms = 6;
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Maximized;
-        }
+        public const int UpdateTimestepMs = 11;
+        public const int RenderTimestepMs = 6;
 
         public Form1()
         {
             InitializeComponent();
-            world = new World(dbPanel1.Width, dbPanel1.Height, update_timestep_in_ms);
+            _world = new World(dbPanel1.Width, dbPanel1.Height, UpdateTimestepMs);
 
-            render_timer = new System.Timers.Timer();
-            render_timer.Elapsed += Render_timer_Elapsed;
-            render_timer.Interval = render_timestep_in_ms;
-            render_timer.Enabled = true;
+            _renderTimer = new System.Timers.Timer();
+            _renderTimer.Elapsed += OnRenderTimerElapsed;
+            _renderTimer.Interval = RenderTimestepMs;
+            _renderTimer.Enabled = true;
 
-            this.min_velocity_Slider.Init(this, "min. velocity", 0, 1000, (int)(this.world.Min_velocity_in_pixels));
-            this.max_velocity_Slider.Init(this, "max. velocity", 0, 1000, (int)(this.world.Max_velocity_in_pixels));
-            this.Newton_percentage_Slider.Init(this, "Newton (inertia) %", 75, 100, this.world.Newton_percentage);
+            this.Resize += OnFormResize;
+            this.KeyPreview = true;
+            this.KeyDown += OnKeyDown;
 
-            this.Resize += new System.EventHandler(this.ResizeForm_Resize);
-
-            Play = true;
-            world.Start();
+            _world.IsPlaying = true;
+            _world.Start();
         }
 
-        private void ResizeForm_Resize(object sender, System.EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Maximized;
+            _world.Populate(3, 20);
+            this.ActiveControl = null;
+        }
+
+        private void OnFormResize(object sender, EventArgs e)
         {
             Invalidate();
-            world.Set_size(dbPanel1.Width, dbPanel1.Height);
-            Console.WriteLine("Resize");
+            _world.SetWorldSize(dbPanel1.Width, dbPanel1.Height);
+            _world.ResetPositions(_world.Vehicles.Count);
         }
 
-        private void Play_Button_Click(object sender, EventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            Play = !Play;
-        }
-
-        public void Play_Button_Update_Text()
-        {
-            if (Play) { Play_button.Text = "||"; }
-            else { Play_button.Text = "|>"; }
-        }
-
-        private void Step_Button_Click(object sender, EventArgs e)
-        {
-            Play = false;
-            world.Update_simulation();
-        }
-
-        public bool Play
-        {
-            get { return world.Play; }
-            set { world.Play = value; }
-        }
-
-        private void Render_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            if (this.dbPanel1.IsHandleCreated)
+            if (e.KeyCode == Keys.R)
             {
-                this.dbPanel1.Invoke((MethodInvoker)delegate
+                if (int.TryParse(entityCountTextBox.Text, out int count) && count > 0)
                 {
-                    // Running on the UI thread
-                    Play_Button_Update_Text();
-                });
+                    _world.ResetPositions(count);
+                }
+                else
+                {
+                    _world.ResetPositions(3);
+                    entityCountTextBox.Text = "3";
+                }
             }
+            else if (e.KeyCode == Keys.Space || e.KeyCode == Keys.P)
+            {
+                _world.IsPlaying = !_world.IsPlaying;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.D)
+            {
+                _world.ShowDebugInfo = !_world.ShowDebugInfo;
+            }
+        }
 
-            dbPanel1.Invalidate(); //force new render
+        private void EntityCountTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                if (int.TryParse(entityCountTextBox.Text, out int count) && count > 0)
+                {
+                    _world.ResetPositions(count);
+                }
+                else
+                {
+                    entityCountTextBox.Text = _world.Vehicles.Count.ToString();
+                }
+                this.ActiveControl = null;
+                e.Handled = true;
+            }
+        }
+
+        private void OnRenderTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (infoLabel.IsHandleCreated)
+            {
+                try
+                {
+                    infoLabel.Invoke((MethodInvoker)delegate
+                    {
+                        UpdateInfoLabel();
+                    });
+                }
+                catch { /* Handle disposal during shutdown */ }
+            }
+            dbPanel1.Invalidate();
+        }
+
+        private void UpdateInfoLabel()
+        {
+            infoLabel.Text = $"Entities: {_world.Vehicles.Count}\n" +
+                           $"Status: {(_world.IsPlaying ? "Playing" : "Paused")}\n" +
+                           $"Debug: {(_world.ShowDebugInfo ? "On" : "Off")}\n" +
+                           $"\nControls\n" +
+                           $"R - Restart\n" +
+                           $"Space/P - Pause\n" +
+                           $"D - Debug Info\n" +
+                           $"Click - Set Target";
         }
 
         private void DbPanel1_Paint(object sender, PaintEventArgs e)
         {
-            world.Render(e.Graphics);
+            _world.Render(e.Graphics);
         }
 
         private void DbPanel1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
-                Console.WriteLine("mouse --> right click");
+                _world.SetTarget(e.X, e.Y);
             }
-            else if (e.Button == MouseButtons.Left)
-            {
-                world.Set_seek_target(e.X, e.Y);
-                Console.WriteLine("mouse --> left click: seek target");
-            }
-        }
-
-        public void SliderValueChanged(MySlider source, int value)
-        {
-            if (source == min_velocity_Slider)
-            {
-                world.Min_velocity_in_pixels = min_velocity_Slider.Value;
-            }
-            else if (source == max_velocity_Slider)
-            {
-                world.Max_velocity_in_pixels = max_velocity_Slider.Value;
-            }
-            else if (source == Newton_percentage_Slider)
-            {
-                world.Newton_percentage = Newton_percentage_Slider.Value;
-            }
-        }
-
-        private void ShowVectorCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            world.Show_debug_info = showVectorCheckBox.Checked;
-        }
-
-        private void restart_button_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int nr_vehicles = Int32.Parse(nr_of_vehicles_textBox.Text);
-                world.Randomize_positions(nr_vehicles);
-            }
-            catch
-            {
-                nr_of_vehicles_textBox.Text = "a number > 0 please!";
-            }
+            this.ActiveControl = null;
         }
     }
 }

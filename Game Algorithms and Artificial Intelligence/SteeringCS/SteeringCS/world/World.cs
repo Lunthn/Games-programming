@@ -1,233 +1,223 @@
 ﻿using SteeringCS.entity;
 using SteeringCS.util;
-using System.Collections.Generic;
+using SteeringCS.world;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using SteeringCS.world;
 
 namespace SteeringCS
 {
-    /// <summary>
-    /// World acts as the simulation hub.
-    /// Updates run on a background thread; rendering is triggered by the UI timer.
-    /// </summary>
     public class World : My_base_thread
     {
-        // --- Properties & Fields ---
-        private int Width { get; set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public bool IsPlaying { get; set; }
+        public Vector_2D TargetPosition { get; }
 
-        private int Height { get; set; }
-        public List<Vehicle> vehicles_list;
-        public List<Wall> walls_list;
-        public Vector_2D Seek_target { get; }
+        public List<Entity> Vehicles { get; private set; }
+        public List<WorldObject> Objects { get; private set; }
 
-        private readonly object lock_update_object = new object();
-        public bool Play { get; set; }
-        private double update_time_step_in_ms;
+        private readonly object _syncLock = new object();
+        private double _updateTimeStepMs;
+        private bool _shouldStopLoop = false;
+        private bool _isRunning = true;
 
-        // --- Threading Flags ---
-        private bool _update_loop_should_stop = false;
+        private int _inertiaPercentage = 97;
 
-        private bool _update_loop_is_running = true;
-
-        // --- Settings with Propagating Properties ---
-        private int newton_percentage = 97;
-
-        public int Newton_percentage
+        public int InertiaPercentage
         {
-            get => newton_percentage;
-            set => newton_percentage = Math.Max(0, Math.Min(100, value));
+            get => _inertiaPercentage;
+            set => _inertiaPercentage = Math.Max(0, Math.Min(100, value));
         }
 
-        private double _maximumVelocity_in_pixels_per_second = 500;
+        private double _maxVelocity = 500;
 
-        public double Max_velocity_in_pixels
+        public double MaxVelocity
         {
-            get => _maximumVelocity_in_pixels_per_second;
+            get => _maxVelocity;
             set
             {
-                if (value < _minimumVelocity_in_pixels_per_second) return;
-                _maximumVelocity_in_pixels_per_second = value;
-                vehicles_list.ForEach(v => v.Maximum_Velocity_in_pixels_per_second = value);
+                if (value < _minVelocity) return;
+                _maxVelocity = value;
+                Vehicles.ForEach(v => v.MaxVelocity = value);
             }
         }
 
-        private double _minimumVelocity_in_pixels_per_second = 1;
+        private double _minVelocity = 1;
 
-        public double Min_velocity_in_pixels
+        public double MinVelocity
         {
-            get => _minimumVelocity_in_pixels_per_second;
+            get => _minVelocity;
             set
             {
-                if (value > Max_velocity_in_pixels || value < 0) return;
-                _minimumVelocity_in_pixels_per_second = value;
-                vehicles_list.ForEach(v => v.Minimum_Velocity_in_pixels_per_second = value);
+                if (value > _maxVelocity || value < 0) return;
+                _minVelocity = value;
+                Vehicles.ForEach(v => v.MinVelocity = value);
             }
         }
 
-        private bool show_debug_info = true;
+        private bool _showDebugInfo = false;
 
-        public bool Show_debug_info
+        public bool ShowDebugInfo
         {
-            get => show_debug_info;
+            get => _showDebugInfo;
             set
             {
-                show_debug_info = value;
-                vehicles_list.ForEach(v => v.Show_debug_info = value);
+                _showDebugInfo = value;
+                Vehicles.ForEach(v => v.ShowDebugInfo = value);
             }
         }
 
-        public World(int w, int h, int update_time_step)
+        public World(int width, int height, int updateTimeStep)
         {
             Set_thread_as_background(true);
-            this.update_time_step_in_ms = update_time_step;
-            Width = w;
-            Height = h;
+            _updateTimeStepMs = updateTimeStep;
+            Width = width;
+            Height = height;
 
-            vehicles_list = new List<Vehicle>();
-            walls_list = new List<Wall>();
-            Seek_target = new Vector_2D(Width / 2, Height / 2);
-
-            Populate(3);
-            BuildWalls(5);
+            Vehicles = new List<Entity>();
+            Objects = new List<WorldObject>();
+            TargetPosition = new Vector_2D(Width / 2, Height / 2);
         }
 
-        private void Populate(int nr_of_entities)
+        private void BuildEntities(int count)
         {
-            lock (lock_update_object)
+            lock (_syncLock)
             {
-                vehicles_list.Clear();
-                Set_seek_target(Width / 2, Height / 2);
+                Vehicles.Clear();
+                SetTarget(Width / 2, Height / 2);
                 Random rng = new Random();
 
-                for (int i = 0; i < nr_of_entities; i++)
+                for (int i = 0; i < count; i++)
                 {
                     Vector_2D pos = new Vector_2D(Width * rng.NextDouble(), Height * rng.NextDouble());
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Vehicle v = new Vehicle(this, "vehicle", pos, vel) { Arrive_target = Seek_target };
-                    vehicles_list.Add(v);
+                    Entity v = new Entity(this, "vehicle", pos, vel) { ArriveTarget = TargetPosition };
+                    Vehicles.Add(v);
                 }
 
-                // Self-assignment triggers property logic to sync vehicle stats
-                Min_velocity_in_pixels = Min_velocity_in_pixels;
-                Max_velocity_in_pixels = Max_velocity_in_pixels;
-                Show_debug_info = Show_debug_info;
+                MinVelocity = _minVelocity;
+                MaxVelocity = _maxVelocity;
+                ShowDebugInfo = _showDebugInfo;
             }
         }
 
-        private void BuildWalls(int nr_of_walls)
+        private void BuildObjects(int count)
         {
-            Random rng = new Random();
-
-            walls_list.Clear();
-
-            for (int i = 0; i < nr_of_walls; i++)
+            lock (_syncLock)
             {
-                Vector_2D start = new Vector_2D(
-                    rng.NextDouble() * (Width - 2),
-                    rng.NextDouble() * (Height - 2)
-                );
-
-                Vector_2D end = new Vector_2D(
-                    rng.NextDouble() * (Width - 2),
-                    rng.NextDouble() * (Height - 2)
-                );
-
-                walls_list.Add(new Wall(start, end));
+                Objects.Clear();
+                Random rng = new Random();
+                for (int i = 0; i < count; i++)
+                {
+                    float radius = (float)Math.Floor(rng.NextDouble() * 50 + 5);
+                    Vector_2D position = new Vector_2D(Width * rng.NextDouble(), Height * rng.NextDouble());
+                    Objects.Add(new WorldObject(position, radius));
+                }
             }
         }
 
-        public void Update_simulation()
+        public void Populate(int vehicleCount, int wallCount)
         {
-            lock (lock_update_object)
+            BuildEntities(vehicleCount);
+            BuildObjects(wallCount);
+        }
+
+        public void UpdateSimulation()
+        {
+            lock (_syncLock)
             {
-                foreach (Vehicle v in vehicles_list) v.UpdateSimulation(update_time_step_in_ms);
+                foreach (Entity v in Vehicles) v.UpdateSimulation(_updateTimeStepMs);
             }
         }
 
         public override void Run_thread()
         {
-            Play = true;
+            IsPlaying = true;
             while (true)
             {
-                if (_update_loop_is_running)
+                if (_isRunning)
                 {
-                    while (true)
+                    DateTime start = DateTime.Now;
+
+                    if (IsPlaying) UpdateSimulation();
+
+                    if (_shouldStopLoop)
                     {
-                        DateTime start = DateTime.Now;
-                        if (Play) Update_simulation();
-
-                        if (_update_loop_should_stop)
-                        {
-                            _update_loop_should_stop = false;
-                            _update_loop_is_running = false;
-                            break;
-                        }
-
-                        int sleep = (int)Math.Max(0, update_time_step_in_ms - (DateTime.Now - start).TotalMilliseconds);
-                        Thread.Sleep(sleep);
+                        _shouldStopLoop = false;
+                        _isRunning = false;
                     }
+
+                    int elapsed = (int)(DateTime.Now - start).TotalMilliseconds;
+                    int sleepTime = Math.Max(0, (int)_updateTimeStepMs - elapsed);
+                    Thread.Sleep(sleepTime);
                 }
-                else Thread.Sleep(3);
+                else
+                {
+                    Thread.Sleep(3);
+                }
             }
         }
 
-        // --- Control Methods ---
-        public void Randomize_positions(int nr_of_vehicles)
+        public void ResetPositions(int vehicleCount)
         {
-            if (nr_of_vehicles < 1) nr_of_vehicles = 1;
-            Stop_update_loop();
-            Wait_for_update_loop_to_finish();
+            int count = Math.Max(1, vehicleCount);
+            StopUpdateLoop();
+            WaitForLoopToStop();
 
-            lock (lock_update_object)
+            lock (_syncLock)
             {
-                Populate(nr_of_vehicles);
-                Start_update_loop();
+                BuildEntities(vehicleCount);
+                StartUpdateLoop();
             }
         }
 
-        public void Set_seek_target(int x, int y)
+        public void SetTarget(int x, int y)
         {
-            Seek_target.X = x;
-            Seek_target.Y = y;
+            TargetPosition.X = x;
+            TargetPosition.Y = y;
         }
 
-        public void Set_size(int w, int h)
+        public void SetWorldSize(int w, int h)
         {
-            lock (lock_update_object)
+            lock (_syncLock)
             {
                 Width = w;
                 Height = h;
             }
         }
 
-        private void Stop_update_loop() => _update_loop_should_stop = true;
+        public void StopUpdateLoop() => _shouldStopLoop = true;
 
-        private void Start_update_loop()
-        { _update_loop_should_stop = false; _update_loop_is_running = true; }
+        public void StartUpdateLoop()
+        {
+            _shouldStopLoop = false;
+            _isRunning = true;
+        }
 
-        private void Wait_for_update_loop_to_finish()
-        { while (_update_loop_is_running) Thread.Sleep(1); }
+        private void WaitForLoopToStop()
+        {
+            while (_isRunning) Thread.Sleep(1);
+        }
 
-        // --- Rendering ---
         public void Render(Graphics g)
         {
             try
             {
-                foreach (Vehicle v in vehicles_list) v.Render(g);
-                foreach (Wall w in walls_list) w.Render(g);
+                foreach (Entity v in Vehicles) v.Render(g);
+                foreach (WorldObject w in Objects) w.Render(g);
             }
             catch { /* Ignore collection sync issues during render */ }
 
-            using (Pen pen = new Pen(Color.Black, 3))
+            using (Pen pen = new Pen(Color.Black, 2))
             {
-                float x = (float)Seek_target.X;
-                float y = (float)Seek_target.Y;
-                g.DrawLine(pen, x - 10, y - 10, x + 10, y + 10);
-                g.DrawLine(pen, x + 10, y - 10, x - 10, y + 10);
+                float x = (float)TargetPosition.X;
+                float y = (float)TargetPosition.Y;
+                g.DrawLine(pen, x - 5, y - 5, x + 5, y + 5);
+                g.DrawLine(pen, x + 5, y - 5, x - 5, y + 5);
             }
         }
     }

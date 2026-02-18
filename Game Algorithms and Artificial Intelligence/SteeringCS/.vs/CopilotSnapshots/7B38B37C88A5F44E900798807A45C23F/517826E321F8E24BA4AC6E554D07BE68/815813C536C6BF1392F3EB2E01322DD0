@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using SteeringCS.entity;
+using SteeringCS.util;
+using SteeringCS.world;
+
+namespace SteeringCS.behaviours
+{
+    public class ObstacleAvoidance_Behaviour : Steering_Behaviour
+    {
+        public double DetectionBoxLength { get; set; } = 300.0;
+
+        public ObstacleAvoidance_Behaviour(Entity owner) : base(owner)
+        {
+        }
+
+        public override Vector_2D Calculate()
+        {
+            if (Owner.MyWorld == null || Owner.MyWorld.Objects == null)
+                return new Vector_2D(0, 0);
+
+            double dynamicLength = DetectionBoxLength + 
+                (Owner.Velocity.Length() / Owner.MaxVelocity) * DetectionBoxLength;
+
+            WorldObject closestObstacle = null;
+            double closestDistance = double.MaxValue;
+
+            foreach (var obstacle in Owner.MyWorld.Objects)
+            {
+                Vector_2D toObstacle = Vector_2D.Subtract(obstacle.Position, Owner.Position);
+                double distance = toObstacle.Length();
+
+                if (distance > dynamicLength + obstacle.Radius)
+                    continue;
+
+                Vector_2D direction = Owner.Direction.Clone().Normalize();
+                double projection = toObstacle.X * direction.X + toObstacle.Y * direction.Y;
+
+                if (projection <= 0 || projection > dynamicLength)
+                    continue;
+
+                Vector_2D projectedPoint = Vector_2D.Multiply(direction, projection);
+                Vector_2D closestPointOnPath = Vector_2D.Add(Owner.Position, projectedPoint);
+                double distanceToPath = Vector_2D.Distance(obstacle.Position, closestPointOnPath);
+
+                double safetyMargin = obstacle.Radius + 50;
+
+                if (distanceToPath <= safetyMargin && projection < closestDistance)
+                {
+                    closestDistance = projection;
+                    closestObstacle = obstacle;
+                }
+            }
+
+            if (closestObstacle == null)
+                return new Vector_2D(0, 0);
+
+            Vector_2D toObstacle = Vector_2D.Subtract(closestObstacle.Position, Owner.Position);
+            Vector_2D lateral = Owner.Direction.Clone().Rotate_90_degrees_clockwise();
+
+            double dotProduct = toObstacle.X * lateral.X + toObstacle.Y * lateral.Y;
+
+            if (dotProduct > 0)
+                lateral.Multiply(-1);
+
+            double strength = (1.0 - (closestDistance / dynamicLength)) * 2.5;
+            Vector_2D steeringForce = Vector_2D.Multiply(lateral, strength * Owner.MaxVelocity);
+
+            return steeringForce;
+        }
+
+        public override void Render_for_Debug(Graphics g)
+        {
+            if (Owner.Direction.Is_length_zero()) return;
+
+            double dynamicLength = DetectionBoxLength + 
+                (Owner.Velocity.Length() / Owner.MaxVelocity) * DetectionBoxLength;
+
+            Vector_2D endPoint = Owner.Direction.Clone().Scale_to_Length(dynamicLength);
+            endPoint.Add(Owner.Position);
+
+            using (Pen pen = new Pen(Color.Yellow, 2))
+            {
+                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                g.DrawLine(pen,
+                    (float)Owner.Position.X, (float)Owner.Position.Y,
+                    (float)endPoint.X, (float)endPoint.Y);
+            }
+
+            const float boxWidth = 30f;
+            Vector_2D side = Owner.Direction.Clone().Rotate_90_degrees_clockwise().Scale_to_Length(boxWidth / 2);
+
+            PointF[] detectionBox = new PointF[]
+            {
+                new PointF((float)(Owner.Position.X + side.X), (float)(Owner.Position.Y + side.Y)),
+                new PointF((float)(Owner.Position.X - side.X), (float)(Owner.Position.Y - side.Y)),
+                new PointF((float)(endPoint.X - side.X), (float)(endPoint.Y - side.Y)),
+                new PointF((float)(endPoint.X + side.X), (float)(endPoint.Y + side.Y))
+            };
+
+            using (Pen pen = new Pen(Color.FromArgb(100, Color.Orange), 1))
+            {
+                g.DrawPolygon(pen, detectionBox);
+            }
+        }
+    }
+}
