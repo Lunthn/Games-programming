@@ -48,7 +48,7 @@ namespace MatrixTransformations
 
         public void Draw(Graphics g, List<Vector> vb)
         {
-            Pen pen = new Pen(color, 2f);
+            Pen pen = new Pen(color, 3f);
             Brush brush = new SolidBrush(Color.Black);
 
             g.DrawLine(pen, vb[0].x, vb[0].y, vb[1].x, vb[1].y);    //0 -> 1

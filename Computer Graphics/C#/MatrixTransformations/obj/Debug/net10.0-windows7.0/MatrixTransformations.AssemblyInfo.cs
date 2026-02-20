@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MatrixTransformations")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+784148425397abea34918e5996fa57eb06eddc60")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5eeb97f8ce46b2c94d3680ca2ea4ca2868c74868")]
 [assembly: System.Reflection.AssemblyProductAttribute("MatrixTransformations")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MatrixTransformations")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,33 +1,31 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace MatrixTransformations
+﻿namespace MatrixTransformations
 {
     public class Matrix
     {
-        private float[,] mat = new float[4, 4];
+        float[,] mat = new float[4, 4];
 
         public Matrix() : this(0, 0, 0, 0)
         {
         }
 
-        public Matrix(float m11, float m12, float m21, float m22) : this(m11, m12, 0, m21, m22, 0, 0, 0, 0)
+        public Matrix(float m11, float m12, float m21, float m22) : this(m11, m12, 0, m21, m22, 0, 0, 0, 1)
         {
         }
 
-        public Matrix(float m11, float m12, float m13,
-                      float m21, float m22, float m23,
-                      float m31, float m32, float m33)
+        public Matrix(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
         {
             mat[0, 0] = m11; mat[0, 1] = m12; mat[0, 2] = m13; mat[0, 3] = 0;
             mat[1, 0] = m21; mat[1, 1] = m22; mat[1, 2] = m23; mat[1, 3] = 0;
             mat[2, 0] = m31; mat[2, 1] = m32; mat[2, 2] = m33; mat[2, 3] = 0;
-            mat[3, 0] = 0; mat[3, 1] = 0; mat[3, 2] = 0; mat[3, 3] = 1;
+            mat[3, 0] = 0;      mat[3, 1] = 0;      mat[3, 2] = 0;      mat[3, 3] = 1;
         }
 
-        public Matrix(Vector v) : this(v.x, 0, 0, v.y, 0, 0, v.z, 0, 0)
+        public Matrix(Vector v)
         {
+            mat[0, 0] = v.x; mat[0, 1] = 0; mat[0, 2] = 0; mat[0, 3] = 0;
+            mat[1, 0] = v.y; mat[1, 1] = 0; mat[1, 2] = 0; mat[1, 3] = 0;
+            mat[2, 0] = v.z; mat[2, 1] = 0; mat[2, 2] = 0; mat[2, 3] = 0;
+            mat[3, 0] = v.w; mat[3, 1] = 0; mat[3, 2] = 0; mat[3, 3] = 0;
         }
 
         public Vector ToVector()
@@ -37,47 +35,55 @@ namespace MatrixTransformations
 
         public static Matrix operator +(Matrix m1, Matrix m2)
         {
-            Matrix result = new Matrix();
+            var tempMat = new Matrix();
+            float[,] mat = tempMat.mat;
 
-            for (int i = 0; i < m1.mat.GetLength(0); i++)
+            for (int i = 0; i < m1.mat.GetLength(1); i++)
             {
-                for (int j = 0; j < m1.mat.GetLength(1); j++)
+                for (int j = 0; j < m1.mat.GetLength(0); j++)
                 {
-                    result.mat[i, j] = m1.mat[i, j] + m2.mat[i, j];
+                    mat[i, j] = m1.mat[i, j] + m2.mat[i, j];
                 }
             }
 
-            return result;
+            return new Matrix(
+                mat[0, 0], mat[0, 1], mat[0,2], 
+                mat[1, 0], mat[1, 1], mat[1,2],
+                mat[2,0], mat[2, 1], mat[2, 2]);
         }
 
         public static Matrix operator -(Matrix m1, Matrix m2)
         {
-            Matrix result = new Matrix();
+            var tempMat = new Matrix();
+            float[,] mat = tempMat.mat;
 
-            for (int i = 0; i < m1.mat.GetLength(0); i++)
+            for (int i = 0; i < m1.mat.GetLength(1); i++)
             {
-                for (int j = 0; j < m1.mat.GetLength(1); j++)
+                for (int j = 0; j < m1.mat.GetLength(0); j++)
                 {
-                    result.mat[i, j] = m1.mat[i, j] - m2.mat[i, j];
+                    tempMat.mat[i, j] = m1.mat[i, j] - m2.mat[i, j];
                 }
             }
 
-            return result;
+            return new Matrix(
+                mat[0, 0], mat[0, 1], mat[0, 2],
+                mat[1, 0], mat[1, 1], mat[1, 2],
+                mat[2, 0], mat[2, 1], mat[2, 2]);
         }
 
         public static Matrix operator *(Matrix m1, float f)
         {
-            Matrix result = new Matrix();
+            var tempMat = new Matrix();
 
-            for (int i = 0; i < m1.mat.GetLength(0); i++)
+            for (int i = 0; i < m1.mat.GetLength(1); i++)
             {
-                for (int j = 0; j < m1.mat.GetLength(1); j++)
+                for (int j = 0; j < m1.mat.GetLength(0); j++)
                 {
-                    result.mat[i, j] = m1.mat[i, j] * f;
+                    tempMat.mat[i, j] = m1.mat[i, j] * f;
                 }
             }
 
-            return result;
+            return tempMat;
         }
 
         public static Matrix operator *(float f, Matrix m1)
@@ -87,69 +93,47 @@ namespace MatrixTransformations
 
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
-            int size = m1.mat.GetLength(0);
-            Matrix result = new Matrix();
+            int rows = m1.mat.GetLength(0);
+            int cols = m2.mat.GetLength(1);
+            int sharedLength = m1.mat.GetLength(1);
 
-            for (int i = 0; i < size; i++)
+            var tempMat = new Matrix();
+
+            for (int r = 0; r < rows; r++)
             {
-                for (int j = 0; j < size; j++)
+                for (int c = 0; c < cols; c++)
                 {
                     float sum = 0;
-                    for (int k = 0; k < size; k++)
+
+                    for (int k = 0; k < sharedLength; k++)
                     {
-                        sum += m1.mat[i, k] * m2.mat[k, j];
+                        sum += m1.mat[r, k] * m2.mat[k, c];
                     }
-                    result.mat[i, j] = sum;
+
+                    tempMat.mat[r, c] = sum;
                 }
             }
-            return result;
+
+            return tempMat;
         }
 
-        public static Vector operator *(Matrix m, Vector v)
+        public static Vector operator *(Matrix m1, Vector v)
         {
-            return new Vector(
-                m.mat[0, 0] * v.x + m.mat[0, 1] * v.y + m.mat[0, 2] * v.z + m.mat[0, 3] * v.w,
-                m.mat[1, 0] * v.x + m.mat[1, 1] * v.y + m.mat[1, 2] * v.z + m.mat[1, 3] * v.w,
-                m.mat[2, 0] * v.x + m.mat[2, 1] * v.y + m.mat[2, 2] * v.z + m.mat[2, 3] * v.w
-            );
+            var m2 = new Matrix(v);
+
+            var resultMat = m1 * m2;
+
+            return resultMat.ToVector();
         }
 
         public static Matrix Identity()
         {
-            Matrix result = new Matrix();
-
-            for (int i = 0; i < result.mat.GetLength(0); i++)
-            {
-                result.mat[i, i] = 1;
-            }
-
-            return result;
+            return new Matrix(1, 0, 0, 0, 1, 0, 0, 0, 1);
         }
 
-        public override string ToString()
+        public static Matrix ScaleMatrix(float s)
         {
-            StringBuilder result = new StringBuilder();
-
-            for (int i = 0; i < mat.GetLength(0); i++)
-            {
-                result.Append("[ ");
-                for (int j = 0; j < mat.GetLength(1); j++)
-                {
-                    result.AppendFormat("{0,2} ", mat[i, j]);
-                }
-                result.Append("]\n");
-            }
-
-            return result.ToString();
-        }
-
-        public static Matrix ScaleMatrix(float scalar)
-        {
-            Matrix result = Identity();
-            result.mat[0, 0] = scalar;
-            result.mat[1, 1] = scalar;
-            result.mat[2, 2] = scalar;
-            return result;
+            return new Matrix(s, 0, 0, 0, s, 0, 0, 0, s);
         }
 
         public static Matrix RotateMatrixX(float degrees)
@@ -164,7 +148,7 @@ namespace MatrixTransformations
             result.mat[1, 1] = cos;
             result.mat[2, 1] = sin;
             result.mat[1, 2] = -sin;
-            result.mat[2, 2] = sin;
+            result.mat[2, 2] = cos;
 
             return result;
         }
@@ -196,13 +180,13 @@ namespace MatrixTransformations
             return new Matrix(cos, -sin, sin, cos);
         }
 
-        public static Matrix TranslateMatrix(float x, float y, float z)
+        public static Matrix TranslateMatrix(Vector t)
         {
-            Matrix result = Identity();
-            result.mat[0, 3] = x;
-            result.mat[1, 3] = y;
-            result.mat[2, 3] = z;
-            return result;
+            var tempMat = Identity();
+            tempMat.mat[0, 3] = t.x;
+            tempMat.mat[1, 3] = t.y;
+            tempMat.mat[2, 3] = t.z;
+            return tempMat;
         }
 
         public static Matrix ViewMatrix(float r, float theta, float phi)
@@ -222,7 +206,7 @@ namespace MatrixTransformations
 
             result.mat[1, 0] = -cos_theta * cos_phi;
             result.mat[1, 1] = -cos_phi * sin_theta;
-            result.mat[1, 2] = sin_theta;
+            result.mat[1, 2] = sin_phi;
 
             result.mat[2, 0] = cos_theta * sin_phi;
             result.mat[2, 1] = sin_theta * sin_phi;
@@ -240,6 +224,23 @@ namespace MatrixTransformations
             result.mat[1, 1] = -(d / v_z);
 
             return result;
+        }
+
+        public override string ToString()
+        {
+            var s = "";
+
+            for (int i = 0; i < mat.GetLength(1); i++)
+            {
+                for (int j = 0; j < mat.GetLength(0); j++)
+                {
+                    s += mat[i, j] + " ";
+                }
+
+                s += "\n";
+            }
+
+            return s;
         }
     }
 }
