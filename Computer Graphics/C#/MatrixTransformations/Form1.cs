@@ -74,16 +74,16 @@ namespace MatrixTransformations
             var result = new List<Vector>();
 
             var scaleMatrix = Matrix.ScaleMatrix(scale);
-            var rotX = Matrix.RotateMatrixX(this.rotX);
-            var rotY = Matrix.RotateMatrixY(this.rotY);
-            var rotZ = Matrix.RotateMatrixZ(this.rotZ);
+            var rotateMatrixX = Matrix.RotateMatrixX(this.rotX);
+            var rotateMatrixY = Matrix.RotateMatrixY(this.rotY);
+            var rotateMatrixZ = Matrix.RotateMatrixZ(this.rotZ);
             var translateMatrix = Matrix.TranslateMatrix(new Vector(posX, posY, posZ));
 
-            var worldMatrix = translateMatrix * rotZ * rotY * rotX * scaleMatrix;
+            var totalMatrix = translateMatrix * rotateMatrixZ * rotateMatrixY * rotateMatrixX * scaleMatrix;
 
             foreach (Vector v in vertexbuffer)
             {
-                Vector v2 = worldMatrix * v;
+                Vector v2 = totalMatrix * v;
                 result.Add(v2);
             }
 
