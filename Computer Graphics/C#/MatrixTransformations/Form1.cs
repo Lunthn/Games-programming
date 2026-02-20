@@ -4,6 +4,7 @@ using System.DirectoryServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
+using Timer = System.Windows.Forms.Timer;
 
 namespace MatrixTransformations
 {
@@ -36,7 +37,11 @@ namespace MatrixTransformations
         private float rotY = 0;
         private float rotZ = 0;
         private float scale = 1;
+
         private int phase = 0;
+        private int phasePart = 0;
+
+        private Timer animationTimer;
         private bool animationIsPlaying = false;
 
         public Form1()
@@ -54,6 +59,17 @@ namespace MatrixTransformations
 
             // Create objects
             cube = new Cube(Color.Purple);
+
+            this.animationTimer = new Timer();
+            animationTimer.Interval = 50;
+            animationTimer.Tick += (s, e) =>
+            {
+                if (animationIsPlaying)
+                {
+                    Animate();
+                    Invalidate();
+                }
+            };
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -67,6 +83,73 @@ namespace MatrixTransformations
             cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
 
             DrawInfo(e.Graphics);
+        }
+
+        private void Animate()
+        {
+            if (phase == 1)
+            {
+                theta -= 1f;
+                if (phasePart == 1)
+                {
+                    if (scale <= 1.5f) scale += 0.01f;
+                    else phasePart = 2;
+                }
+                else
+                {
+                    if (scale >= 1f) scale -= 0.01f;
+                    else
+                    {
+                        scale = 1;
+                        phase = 2;
+                        phasePart = 1;
+                    }
+                }
+            }
+            else if (phase == 2)
+            {
+                theta -= 1f;
+                if (phasePart == 1)
+                {
+                    if (rotX <= 45f) rotX += 1f;
+                    else phasePart = 2;
+                }
+                else
+                {
+                    if (rotX >= 0f) rotX -= 1f;
+                    else
+                    {
+                        rotX = 0f;
+                        phase = 3;
+                        phasePart = 1;
+                    }
+                }
+            }
+            else if (phase == 3)
+            {
+                phi += 1f;
+                if (phasePart == 1)
+                {
+                    if (rotY <= 45f) rotY += 1f;
+                    else phasePart = 2;
+                }
+                else
+                {
+                    if (rotY >= 0f) rotY -= 1f;
+                    else
+                    {
+                        rotY = 0f;
+                        phase = 4;
+                        phasePart = 1;
+                    }
+                }
+            }
+            else
+            {
+                if (theta != -100) theta += 1.0f;
+                if (phi != -10) phi -= 1.0f;
+                if (phi == -10 && theta == -100) phase = 1;
+            }
         }
 
         public List<Vector> TransformCube(List<Vector> vertexbuffer)
@@ -118,21 +201,21 @@ namespace MatrixTransformations
                 float lineHeight = font.GetHeight(g) + 2;
 
                 string[] labels = {
-                    $"Scale:      {scale} - S/s",
-                    $"TranslateX: {posX}  - Left/right",
-                    $"TranslateY: {posY}  - Up/down",
-                    $"TranslateZ: {posZ}  - PgDn/PgUp",
+                    $"Scale: {scale} - S/s",
+                    $"TranslateX: {posX} - Left/right",
+                    $"TranslateY: {posY} - Up/down",
+                    $"TranslateZ: {posZ} - PgDn/PgUp",
                     "",
-                    $"RotateX:    {rotX}  - X/x",
-                    $"RotateY:    {rotY}  - Y/y",
-                    $"RotateZ:    {rotZ}  - Z/z",
+                    $"RotateX: {rotX} - X/x",
+                    $"RotateY: {rotY} - Y/y",
+                    $"RotateZ: {rotZ} - Z/z",
                     "",
-                    $"r:    {r}  - R/r",
-                    $"d:    {d}  - D/d",
-                    $"phi:    {phi}  - P/p",
-                    $"theta:    {theta}  - T/t",
+                    $"r: {r} - R/r",
+                    $"d: {d} - D/d",
+                    $"phi: {phi} - P/p",
+                    $"theta: {theta} - T/t",
                      "",
-                    $"phase:    {phase}"
+                    $"Animation: {animationIsPlaying} - A",
                 };
                 for (int i = 0; i < labels.Length; i++)
                 {
@@ -140,6 +223,11 @@ namespace MatrixTransformations
                     {
                         g.DrawString(labels[i], font, brush, x, y + (i * lineHeight));
                     }
+                }
+                if (phase != 0)
+                {
+                    string phaseInfo = $"Phase: {phase} (part: {phasePart})";
+                    g.DrawString(phaseInfo, font, brush, x, y + (labels.Length * lineHeight));
                 }
             }
         }
@@ -285,6 +373,25 @@ namespace MatrixTransformations
             if (e.KeyCode == Keys.C)
             {
                 ResetValues();
+            }
+
+            if (e.KeyCode == Keys.A)
+            {
+                animationIsPlaying = !animationIsPlaying;
+
+                if (phase == 0)
+                {
+                    animationTimer.Start();
+                    phase = 1;
+                    phasePart = 1;
+                }
+                else
+                {
+                    animationTimer.Stop();
+                    phase = 0;
+                    phasePart = 0;
+                    ResetValues();
+                }
             }
 
             Invalidate();
