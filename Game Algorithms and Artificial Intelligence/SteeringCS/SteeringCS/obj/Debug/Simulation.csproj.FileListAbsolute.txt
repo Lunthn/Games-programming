@@ -13,7 +13,6 @@ C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intellig
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\bin\Debug\SteeringCS.pdb
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\Simulation.csproj.AssemblyReference.cache
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\SteeringCS.Form1.resources
-C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\SteeringCS.MySlider.resources
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\SteeringCS.Properties.Resources.resources
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\Simulation.csproj.GenerateResource.cache
 C:\Users\nrlup\Desktop\computer-graphics\Game Algorithms and Artificial Intelligence\SteeringCS\SteeringCS\obj\Debug\Simulation.csproj.CoreCompileInputs.cache

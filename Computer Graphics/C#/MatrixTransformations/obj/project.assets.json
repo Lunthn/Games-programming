@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
+      "projectUniqueName": "C:\\Users\\nrlup\\Desktop\\computer-graphics\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
       "projectName": "MatrixTransformations",
-      "projectPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
+      "projectPath": "C:\\Users\\nrlup\\Desktop\\computer-graphics\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
       "packagesPath": "C:\\Users\\nrlup\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\obj\\",
+      "outputPath": "C:\\Users\\nrlup\\Desktop\\computer-graphics\\Computer Graphics\\C#\\MatrixTransformations\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -51,7 +51,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0-windows7.0": {
@@ -75,7 +75,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

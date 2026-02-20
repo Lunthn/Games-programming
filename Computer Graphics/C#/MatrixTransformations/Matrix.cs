@@ -8,7 +8,11 @@ namespace MatrixTransformations
     {
         private float[,] mat = new float[4, 4];
 
-        public Matrix() : this(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        public Matrix() : this(0, 0, 0, 0)
+        {
+        }
+
+        public Matrix(float m11, float m12, float m21, float m22) : this(m11, m12, 0, m21, m22, 0, 0, 0, 0)
         {
         }
 
@@ -148,15 +152,49 @@ namespace MatrixTransformations
             return result;
         }
 
-        //public static Matrix RotateMatrix(float degrees)
-        //{
-        //    double rad = (Math.PI / 180) * degrees;
+        public static Matrix RotateMatrixX(float degrees)
+        {
+            double theta = (Math.PI / 180) * degrees;
 
-        //    float sin = (float)Math.Sin(rad);
-        //    float cos = (float)Math.Cos(rad);
+            float sin = (float)Math.Sin(theta);
+            float cos = (float)Math.Cos(theta);
 
-        //    return new Matrix(cos, -sin, sin, cos);
-        //}
+            Matrix result = Identity();
+
+            result.mat[1, 1] = cos;
+            result.mat[2, 1] = sin;
+            result.mat[1, 2] = -sin;
+            result.mat[2, 2] = sin;
+
+            return result;
+        }
+
+        public static Matrix RotateMatrixY(float degrees)
+        {
+            double theta = (Math.PI / 180) * degrees;
+
+            float sin = (float)Math.Sin(theta);
+            float cos = (float)Math.Cos(theta);
+
+            Matrix result = Identity();
+
+            result.mat[0, 0] = cos;
+            result.mat[0, 2] = sin;
+            result.mat[2, 0] = -sin;
+            result.mat[2, 2] = cos;
+
+            return result;
+        }
+
+        public static Matrix RotateMatrixZ(float degrees)
+        {
+            double theta = (Math.PI / 180) * degrees;
+
+            float sin = (float)Math.Sin(theta);
+            float cos = (float)Math.Cos(theta);
+
+            return new Matrix(cos, -sin, sin, cos);
+        }
 
         public static Matrix TranslateMatrix(float x, float y, float z)
         {
@@ -164,6 +202,43 @@ namespace MatrixTransformations
             result.mat[0, 3] = x;
             result.mat[1, 3] = y;
             result.mat[2, 3] = z;
+            return result;
+        }
+
+        public static Matrix ViewMatrix(float r, float theta, float phi)
+        {
+            Matrix result = Identity();
+
+            double theta_rad = (Math.PI / 180) * theta;
+            double phi_rad = (Math.PI / 180) * phi;
+
+            float sin_theta = (float)Math.Sin(theta_rad);
+            float sin_phi = (float)Math.Sin(phi_rad);
+            float cos_theta = (float)Math.Cos(theta_rad);
+            float cos_phi = (float)Math.Cos(phi_rad);
+
+            result.mat[0, 0] = -sin_theta;
+            result.mat[0, 1] = cos_theta;
+
+            result.mat[1, 0] = -cos_theta * cos_phi;
+            result.mat[1, 1] = -cos_phi * sin_theta;
+            result.mat[1, 2] = sin_theta;
+
+            result.mat[2, 0] = cos_theta * sin_phi;
+            result.mat[2, 1] = sin_theta * sin_phi;
+            result.mat[2, 2] = cos_phi;
+            result.mat[2, 3] = -r;
+
+            return result;
+        }
+
+        public static Matrix ProjectMatrix(float d, float v_z)
+        {
+            Matrix result = Identity();
+
+            result.mat[0, 0] = -(d / v_z);
+            result.mat[1, 1] = -(d / v_z);
+
             return result;
         }
     }

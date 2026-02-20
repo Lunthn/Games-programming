@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using SteeringCS.behaviour;
+using SteeringCS.behaviours;
 using SteeringCS.util;
 
 namespace SteeringCS.entity
@@ -14,6 +15,7 @@ namespace SteeringCS.entity
         public bool IsActive { get; set; }
         public Vector_2D Direction { get; set; }
         public Vector_2D Velocity { get; set; }
+        public int DetectionRadius { get; set; }
         public virtual double MaxVelocity { get; set; }
         public virtual double MinVelocity { get; set; }
         public bool ShowDebugInfo { get; set; }
@@ -35,6 +37,7 @@ namespace SteeringCS.entity
             Position = pos.Clone();
             Velocity = vel?.Clone() ?? new Vector_2D();
             Direction = Velocity.Clone().Normalize();
+            DetectionRadius = 100;
 
             IsActive = true;
             AccelerationForRendering = new Vector_2D();
@@ -42,6 +45,8 @@ namespace SteeringCS.entity
 
             _arriveBehaviour = new Arrive_Behaviour(this);
             Behaviours.Add(_arriveBehaviour);
+
+            Behaviours.Add(new Seperation_Behaviour(this, MyWorld.Vehicles, DetectionRadius));
         }
 
         public virtual void UpdateSimulation(double timeElapsedMs)
@@ -67,6 +72,11 @@ namespace SteeringCS.entity
 
             Vector_2D frameMovement = Vector_2D.Multiply(Velocity, timeElapsedMs / 1000.0);
             Position.Add(frameMovement);
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} Position:({Position.X:F1}, {Position.Y:F1}) Velocity:({Velocity.X:F1}, {Velocity.Y:F1})";
         }
 
         public virtual void Render(Graphics g)
@@ -117,7 +127,11 @@ namespace SteeringCS.entity
                 (int)(Position.X + AccelerationForRendering.X * accScale), (int)(Position.Y + AccelerationForRendering.Y * accScale));
 
             Font font = new Font("Arial", 8);
-            float yOffset = 40;
+            float yOffset = 20;
+
+            g.DrawString(ToString(), new Font(font, FontStyle.Bold), Brushes.Black, (float)Position.X, (float)Position.Y + yOffset);
+            yOffset += 15;
+
             g.DrawString("Active Behaviours:", new Font(font, FontStyle.Bold), Brushes.Black, (float)Position.X, (float)Position.Y + yOffset);
 
             foreach (var behavior in Behaviours)

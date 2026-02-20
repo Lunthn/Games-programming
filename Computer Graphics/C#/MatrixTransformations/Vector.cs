@@ -8,7 +8,7 @@ namespace MatrixTransformations
     {
         public float x, y, z, w;
 
-        public Vector()
+        public Vector(float x, float y) : this(x, y, 0)
         {
         }
 

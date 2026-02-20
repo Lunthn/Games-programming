@@ -1,3 +1,5 @@
+using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MatrixTransformations
@@ -13,17 +15,17 @@ namespace MatrixTransformations
         private AxisX x_axis;
 
         private AxisY y_axis;
+        private AxisZ z_axis;
 
         // Objects
-        private Square square;
+        private Cube cube;
 
-        private Square cyan_square;
-        private Square orange_square;
-        private Square darkblue_square;
+        // Values
+        private float d = 800;
 
-        private float scalar;
-        private float rotation;
-        private float translationX, translationY;
+        private float r = 10;
+        private float theta = -100;
+        private float phi = -10;
 
         public Form1()
         {
@@ -33,20 +35,13 @@ namespace MatrixTransformations
             this.Height = HEIGHT;
             this.DoubleBuffered = true;
 
-            this.rotation = 0f;
-            this.scalar = 1f;
-            this.translationX = 0f;
-            this.translationY = 0f;
-
             // Define axes
-            x_axis = new AxisX(200);
-            y_axis = new AxisY(200);
+            x_axis = new AxisX(3);
+            y_axis = new AxisY(3);
+            z_axis = new AxisZ(3);
 
             // Create objects
-            square = new Square(Color.Purple, 100);
-            cyan_square = new Square(Color.Cyan, 100);
-            orange_square = new Square(Color.Orange, 100);
-            darkblue_square = new Square(Color.DarkBlue, 100);
+            cube = new Cube(Color.Black);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -56,54 +51,21 @@ namespace MatrixTransformations
             // Draw axes
             x_axis.Draw(e.Graphics, ViewportTransformation(x_axis.vertexbuffer));
             y_axis.Draw(e.Graphics, ViewportTransformation(y_axis.vertexbuffer));
+            z_axis.Draw(e.Graphics, ViewportTransformation(z_axis.vertexbuffer));
 
+            var viewMatrix = Matrix.ViewMatrix(r, theta, phi);
             List<Vector> vb = new List<Vector>();
 
-            var scaleMatrix = Matrix.ScaleMatrix(scalar);
-            var rotateMatrix = Matrix.RotateMatrix(rotation);
-            var translationMatrix = Matrix.TranslateMatrix(translationX, translationY);
-
-            foreach (Vector v in square.vertexbuffer)
+            foreach (Vector v in cube.vertexbuffer)
             {
-                Vector v2 = scaleMatrix * v;
-                v2 = rotateMatrix * v2;
-                v2 = translationMatrix * v2;
-                vb.Add(v2);
+                Vector v2 = viewMatrix * v;
+                var projectMatrix = Matrix.ProjectMatrix(d, v.z);
+                Vector v3 = projectMatrix * v2;
+
+                vb.Add(v3);
             }
 
-            square.Draw(e.Graphics, ViewportTransformation(vb));
-
-            vb.Clear();
-
-            scaleMatrix = Matrix.ScaleMatrix(1.5f);
-            foreach (Vector v in square.vertexbuffer)
-            {
-                Vector v2 = scaleMatrix * v;
-                vb.Add(v2);
-            }
-
-            cyan_square.Draw(e.Graphics, ViewportTransformation(vb));
-
-            vb.Clear();
-
-            rotateMatrix = Matrix.RotateMatrix(20f);
-            foreach (Vector v in square.vertexbuffer)
-            {
-                Vector v2 = rotateMatrix * v;
-                vb.Add(v2);
-            }
-
-            orange_square.Draw(e.Graphics, ViewportTransformation(vb));
-
-            vb.Clear();
-            translationMatrix = Matrix.TranslateMatrix(75f, -25);
-            foreach (Vector v in square.vertexbuffer)
-            {
-                Vector v2 = translationMatrix * v;
-                vb.Add(v2);
-            }
-
-            darkblue_square.Draw(e.Graphics, ViewportTransformation(vb));
+            cube.Draw(e.Graphics, ViewportTransformation(vb));
         }
 
         public static List<Vector> ViewportTransformation(List<Vector> vb)
@@ -127,38 +89,6 @@ namespace MatrixTransformations
         {
             if (e.KeyCode == Keys.Escape)
                 Application.Exit();
-            else if (e.KeyCode == Keys.W)
-            {
-                this.translationY += 5f;
-            }
-            else if (e.KeyCode == Keys.S)
-            {
-                this.translationY -= 5f;
-            }
-            else if (e.KeyCode == Keys.A)
-            {
-                this.translationX -= 5f;
-            }
-            else if (e.KeyCode == Keys.D)
-            {
-                this.translationX += 5f;
-            }
-            else if (e.KeyCode == Keys.Q)
-            {
-                this.rotation -= 5f;
-            }
-            else if (e.KeyCode == Keys.E)
-            {
-                this.rotation += 5f;
-            }
-            else if (e.KeyCode == Keys.Z)
-            {
-                this.scalar += 0.1f;
-            }
-            else if (e.KeyCode == Keys.X)
-            {
-                this.scalar -= 0.1f;
-            }
 
             Invalidate();
         }

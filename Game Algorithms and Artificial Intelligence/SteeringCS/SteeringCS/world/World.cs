@@ -89,13 +89,13 @@ namespace SteeringCS
                 SetTarget(Width / 2, Height / 2);
                 Random rng = new Random();
 
-                for (int i = 0; i < count; i++)
+                for (int i = 1; i <= count; i++)
                 {
                     Vector_2D pos = new Vector_2D(Width * rng.NextDouble(), Height * rng.NextDouble());
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Entity v = new Entity(this, "vehicle", pos, vel) { ArriveTarget = TargetPosition };
+                    Entity v = new Entity(this, "Entity " + i, pos, vel) { ArriveTarget = TargetPosition };
                     Vehicles.Add(v);
                 }
 
