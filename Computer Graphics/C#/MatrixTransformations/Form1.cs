@@ -44,6 +44,15 @@ namespace MatrixTransformations
         private Timer animationTimer;
         private bool animationIsPlaying = false;
 
+        private bool showStars = false;
+        private bool useFancy = false;
+
+        private List<Vector> stars;
+        private int starsAmount = 400;
+
+        private Bitmap canvas;
+        private Graphics canvasGraphics;
+
         public Form1()
         {
             InitializeComponent();
@@ -60,6 +69,18 @@ namespace MatrixTransformations
             // Create objects
             cube = new Cube(Color.Purple);
 
+            // Fill the world with stars to enhance the sense of depth
+            Random rng = new Random();
+            this.stars = new List<Vector>();
+
+            for (int i = 0; i < starsAmount; i++)
+            {
+                float x = (float)(rng.NextDouble() * 20 - 10);
+                float y = (float)(rng.NextDouble() * 20 - 10);
+                float z = (float)(rng.NextDouble() * 20 - 10);
+                stars.Add(new Vector(x, y, z));
+            }
+
             this.animationTimer = new Timer();
             animationTimer.Interval = 50;
             animationTimer.Tick += (s, e) =>
@@ -70,19 +91,52 @@ namespace MatrixTransformations
                     Invalidate();
                 }
             };
+
+            canvas = new Bitmap(WIDTH, HEIGHT);
+            canvasGraphics = Graphics.FromImage(canvas);
+            canvasGraphics.Clear(Color.Black);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
+            if (useFancy)
+            {
+                using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(40, Color.Black)))
+                {
+                    canvasGraphics.FillRectangle(fadeBrush, 0, 0, WIDTH, HEIGHT);
+                }
 
-            x_axis.Draw(e.Graphics, ViewingPipeline(x_axis.vertexbuffer));
-            y_axis.Draw(e.Graphics, ViewingPipeline(y_axis.vertexbuffer));
-            z_axis.Draw(e.Graphics, ViewingPipeline(z_axis.vertexbuffer));
+                if (showStars) DrawStars(canvasGraphics);
 
-            cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
+                x_axis.Draw(canvasGraphics, ViewingPipeline(x_axis.vertexbuffer));
+                y_axis.Draw(canvasGraphics, ViewingPipeline(y_axis.vertexbuffer));
+                z_axis.Draw(canvasGraphics, ViewingPipeline(z_axis.vertexbuffer));
+                cube.Draw(canvasGraphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
+
+                e.Graphics.DrawImage(canvas, 0, 0);
+            }
+            else
+            {
+                e.Graphics.Clear(Color.White);
+
+                if (showStars) DrawStars(e.Graphics);
+
+                x_axis.Draw(e.Graphics, ViewingPipeline(x_axis.vertexbuffer));
+                y_axis.Draw(e.Graphics, ViewingPipeline(y_axis.vertexbuffer));
+                z_axis.Draw(e.Graphics, ViewingPipeline(z_axis.vertexbuffer));
+                cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
+            }
 
             DrawInfo(e.Graphics);
+        }
+
+        private void DrawStars(Graphics g)
+        {
+            var projectedStars = ViewingPipeline(stars);
+            foreach (var star in projectedStars)
+            {
+                g.FillEllipse(useFancy ? Brushes.White : Brushes.Black, star.x, star.y, 2, 2);
+            }
         }
 
         private void Animate()
@@ -194,7 +248,7 @@ namespace MatrixTransformations
         private void DrawInfo(Graphics g)
         {
             using (Font font = new Font("Arial", 10, FontStyle.Bold))
-            using (Brush brush = new SolidBrush(Color.Black))
+            using (Brush brush = new SolidBrush(useFancy ? Color.White : Color.Black))
             {
                 float x = 10;
                 float y = 10;
@@ -214,6 +268,9 @@ namespace MatrixTransformations
                     $"d: {d} - D/d",
                     $"phi: {phi} - P/p",
                     $"theta: {theta} - T/t",
+                     "",
+                    $"Show Stars: {showStars} - H",
+                    $"Fancy Mode: {useFancy} - F",
                      "",
                     $"Animation: {animationIsPlaying} - A",
                 };
@@ -264,6 +321,9 @@ namespace MatrixTransformations
             d = 800f;
             phi = -10f;
             theta = -100f;
+
+            useFancy = false;
+            showStars = false;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -392,6 +452,17 @@ namespace MatrixTransformations
                     phasePart = 0;
                     ResetValues();
                 }
+            }
+
+            if (e.KeyCode == Keys.H)
+            {
+                showStars = !showStars;
+            }
+
+            if (e.KeyCode == Keys.F)
+            {
+                useFancy = !useFancy;
+                if (!useFancy) canvasGraphics.Clear(Color.Black);
             }
 
             Invalidate();
