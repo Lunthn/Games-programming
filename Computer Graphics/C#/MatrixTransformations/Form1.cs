@@ -365,6 +365,7 @@ namespace MatrixTransformations
             rotZ = 0f;
             scale = 1f;
             animationIsPlaying = false;
+            phase = 0;
 
             r = 10f;
             d = 800f;
