@@ -11,9 +11,9 @@ namespace MatrixTransformations
     public partial class Form1 : Form
     {
         // Window dimensions
-        private const int WIDTH = 800;
+        private const int WIDTH = 1200;
 
-        private const int HEIGHT = 600;
+        private const int HEIGHT = 700;
 
         // Axes
         private AxisX x_axis;
@@ -44,14 +44,29 @@ namespace MatrixTransformations
         private Timer animationTimer;
         private bool animationIsPlaying = false;
 
-        private bool showStars = false;
-        private bool useFancy = false;
+        private bool enteredMatrix = false;
+        private Color currentTextColor = Color.Black;
 
         private List<Vector> stars;
-        private int starsAmount = 400;
+        private int starsAmount = 200;
 
         private Bitmap canvas;
         private Graphics canvasGraphics;
+
+        private bool hideDebug = false;
+
+        // Dit is een Windows API functie waarmee we de titelbalk kunnen aanpassen aan onze "fancy mode"
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
+        // Helper methode om de titelbalk kleur te wisselen
+        private void SetDarkModeTitleBar(bool enabled)
+        {
+            int useDarkMode = enabled ? 1 : 0;
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDarkMode, sizeof(int));
+        }
 
         public Form1()
         {
@@ -60,6 +75,7 @@ namespace MatrixTransformations
             this.Width = WIDTH;
             this.Height = HEIGHT;
             this.DoubleBuffered = true;
+            this.Text = "Matrix Transformations";
 
             // Define axes
             x_axis = new AxisX(3);
@@ -99,19 +115,23 @@ namespace MatrixTransformations
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (useFancy)
+            if (enteredMatrix)
             {
-                using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(40, Color.Black)))
+                using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(80, Color.Black)))
                 {
                     canvasGraphics.FillRectangle(fadeBrush, 0, 0, WIDTH, HEIGHT);
                 }
 
-                if (showStars) DrawStars(canvasGraphics);
+                DrawStars(canvasGraphics);
 
-                x_axis.Draw(canvasGraphics, ViewingPipeline(x_axis.vertexbuffer));
-                y_axis.Draw(canvasGraphics, ViewingPipeline(y_axis.vertexbuffer));
-                z_axis.Draw(canvasGraphics, ViewingPipeline(z_axis.vertexbuffer));
-                cube.Draw(canvasGraphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
+                if (!hideDebug)
+                {
+                    x_axis.Draw(canvasGraphics, ViewingPipeline(x_axis.vertexbuffer));
+                    y_axis.Draw(canvasGraphics, ViewingPipeline(y_axis.vertexbuffer));
+                    z_axis.Draw(canvasGraphics, ViewingPipeline(z_axis.vertexbuffer));
+                }
+
+                cube.Draw(canvasGraphics, ViewingPipeline(TransformCube(cube.vertexbuffer)), currentTextColor, hideDebug);
 
                 e.Graphics.DrawImage(canvas, 0, 0);
             }
@@ -119,12 +139,14 @@ namespace MatrixTransformations
             {
                 e.Graphics.Clear(Color.White);
 
-                if (showStars) DrawStars(e.Graphics);
+                if (!hideDebug)
+                {
+                    x_axis.Draw(e.Graphics, ViewingPipeline(x_axis.vertexbuffer));
+                    y_axis.Draw(e.Graphics, ViewingPipeline(y_axis.vertexbuffer));
+                    z_axis.Draw(e.Graphics, ViewingPipeline(z_axis.vertexbuffer));
+                }
 
-                x_axis.Draw(e.Graphics, ViewingPipeline(x_axis.vertexbuffer));
-                y_axis.Draw(e.Graphics, ViewingPipeline(y_axis.vertexbuffer));
-                z_axis.Draw(e.Graphics, ViewingPipeline(z_axis.vertexbuffer));
-                cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)));
+                cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)), currentTextColor);
             }
 
             DrawInfo(e.Graphics);
@@ -132,10 +154,15 @@ namespace MatrixTransformations
 
         private void DrawStars(Graphics g)
         {
-            var projectedStars = ViewingPipeline(stars);
-            foreach (var star in projectedStars)
+            Random rng = new Random();
+            using (Font matrixFont = new Font("Consolas", 8, FontStyle.Bold))
             {
-                g.FillEllipse(useFancy ? Brushes.White : Brushes.Black, star.x, star.y, 2, 2);
+                var projectedStars = ViewingPipeline(stars);
+                foreach (var star in projectedStars)
+                {
+                    char randomChar = (char)rng.Next(33, 127);
+                    g.DrawString(randomChar.ToString(), matrixFont, Brushes.Green, star.x, star.y);
+                }
             }
         }
 
@@ -247,44 +274,66 @@ namespace MatrixTransformations
 
         private void DrawInfo(Graphics g)
         {
-            using (Font font = new Font("Arial", 10, FontStyle.Bold))
-            using (Brush brush = new SolidBrush(useFancy ? Color.White : Color.Black))
+            using (Font font = new Font(enteredMatrix ? "Consolas" : "Arial", 10, FontStyle.Bold))
+            using (Brush brush = new SolidBrush(currentTextColor))
             {
-                float x = 10;
-                float y = 10;
+                float x = 20;
+                float y = 20;
                 float lineHeight = font.GetHeight(g) + 2;
 
-                string[] labels = {
-                    $"Scale: {scale} - S/s",
-                    $"TranslateX: {posX} - Left/right",
-                    $"TranslateY: {posY} - Up/down",
-                    $"TranslateZ: {posZ} - PgDn/PgUp",
-                    "",
-                    $"RotateX: {rotX} - X/x",
-                    $"RotateY: {rotY} - Y/y",
-                    $"RotateZ: {rotZ} - Z/z",
-                    "",
-                    $"r: {r} - R/r",
-                    $"d: {d} - D/d",
-                    $"phi: {phi} - P/p",
-                    $"theta: {theta} - T/t",
-                     "",
-                    $"Show Stars: {showStars} - H",
-                    $"Fancy Mode: {useFancy} - F",
-                     "",
-                    $"Animation: {animationIsPlaying} - A",
-                };
-                for (int i = 0; i < labels.Length; i++)
+                string debugInfo = enteredMatrix ? $"> SYSTEM_DEBUG: {!hideDebug} [M]" : $"Hide debug/controls: {hideDebug} - M";
+                string resetInfo = enteredMatrix ? "> INITIALIZE_RESET [C]" : "Reset everything - C";
+
+                g.DrawString(debugInfo, font, brush, x, y);
+                g.DrawString(resetInfo, font, brush, x, y + lineHeight);
+
+                if (!hideDebug)
                 {
-                    if (!string.IsNullOrEmpty(labels[i]))
+                    List<string> labels = new List<string> {
+                        "",
+                        enteredMatrix ? $"[SCALE]      {scale:F2}" : $"Scale: {scale} - S/s",
+                        enteredMatrix ? $"[TRANS_X]    {posX:F1}"  : $"TranslateX: {posX} - Left/right",
+                        enteredMatrix ? $"[TRANS_Y]    {posY:F1}"  : $"TranslateY: {posY} - Up/down",
+                        enteredMatrix ? $"[TRANS_Z]    {posZ:F1}"  : $"TranslateZ: {posZ} - PgDn/PgUp",
+                        "",
+                        enteredMatrix ? $"[ROT_X]      {rotX:F0}°" : $"RotateX: {rotX} - X/x",
+                        enteredMatrix ? $"[ROT_Y]      {rotY:F0}°" : $"RotateY: {rotY} - Y/y",
+                        enteredMatrix ? $"[ROT_Z]      {rotZ:F0}°" : $"RotateZ: {rotZ} - Z/z",
+                        "",
+                        enteredMatrix ? $"[CAM_R]      {r:F1}"     : $"r: {r} - R/r",
+                        enteredMatrix ? $"[CAM_D]      {d:F0}"     : $"d: {d} - D/d",
+                        enteredMatrix ? $"[PHI]        {phi:F1}"   : $"phi: {phi} - P/p",
+                        enteredMatrix ? $"[THETA]      {theta:F1}" : $"theta: {theta} - T/t",
+                        "",
+                        enteredMatrix ? $"[ANIMATION]  {animationIsPlaying} [A]" : $"Animation: {animationIsPlaying} - A"
+                    };
+
+                    if (phase != 0)
                     {
-                        g.DrawString(labels[i], font, brush, x, y + (i * lineHeight));
+                        labels.Add(enteredMatrix ? $">> CORE_PHASE_{phase}.{phasePart}" : $"Phase: {phase} (part: {phasePart})");
                     }
-                }
-                if (phase != 0)
-                {
-                    string phaseInfo = $"Phase: {phase} (part: {phasePart})";
-                    g.DrawString(phaseInfo, font, brush, x, y + (labels.Length * lineHeight));
+
+                    labels.Add("");
+
+                    for (int i = 0; i < labels.Count; i++)
+                    {
+                        g.DrawString(labels[i], font, brush, x, y + ((i + 2) * lineHeight));
+                    }
+
+                    float finalY = y + ((labels.Count + 2) * lineHeight);
+
+                    if (!enteredMatrix)
+                    {
+                        using (Brush alertBrush = new SolidBrush(Color.Red))
+                        using (font)
+                        {
+                            g.DrawString("TAKE THE RED PILL: PRESS [F]", font, alertBrush, x, finalY);
+                        }
+                    }
+                    else
+                    {
+                        g.DrawString($"> MATRIX: ONLINE [F]", font, brush, x, finalY);
+                    }
                 }
             }
         }
@@ -306,7 +355,7 @@ namespace MatrixTransformations
             return result;
         }
 
-        private void ResetValues()
+        private void ResetValues(bool onlyDimensions = false)
         {
             posX = 0f;
             posY = 0f;
@@ -322,8 +371,19 @@ namespace MatrixTransformations
             phi = -10f;
             theta = -100f;
 
-            useFancy = false;
-            showStars = false;
+            canvasGraphics.Clear(Color.Black);
+
+            if (!onlyDimensions)
+            {
+                this.Text = "Matrix Transformations";
+                SetDarkModeTitleBar(false);
+
+                enteredMatrix = false;
+                hideDebug = false;
+
+                currentTextColor = Color.Black;
+                cube.color = Color.Purple;
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -450,19 +510,35 @@ namespace MatrixTransformations
                     animationTimer.Stop();
                     phase = 0;
                     phasePart = 0;
-                    ResetValues();
+                    ResetValues(true);
                 }
-            }
-
-            if (e.KeyCode == Keys.H)
-            {
-                showStars = !showStars;
             }
 
             if (e.KeyCode == Keys.F)
             {
-                useFancy = !useFancy;
-                if (!useFancy) canvasGraphics.Clear(Color.Black);
+                enteredMatrix = !enteredMatrix;
+
+                if (!enteredMatrix)
+                {
+                    canvasGraphics.Clear(Color.Black);
+                    currentTextColor = Color.Black;
+                    cube.color = Color.Purple;
+
+                    this.Text = "Matrix Transformations";
+                    SetDarkModeTitleBar(false);
+                }
+                else
+                {
+                    currentTextColor = Color.Green;
+                    cube.color = Color.Green;
+                    this.Text = "=== MATRIX_MAIN_FRAME ===";
+                    SetDarkModeTitleBar(true);
+                }
+            }
+
+            if (e.KeyCode == Keys.M)
+            {
+                hideDebug = !hideDebug;
             }
 
             Invalidate();

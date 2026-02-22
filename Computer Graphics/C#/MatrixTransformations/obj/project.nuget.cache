@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "wv0xVaBaaGw=",
+  "dgSpecHash": "HEwqzabtltE=",
   "success": true,
   "projectFilePath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\nrlup\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.3\\microsoft.net.illink.tasks.10.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

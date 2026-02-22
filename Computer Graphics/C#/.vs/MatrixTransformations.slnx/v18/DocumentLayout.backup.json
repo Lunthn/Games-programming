@@ -7,11 +7,8 @@
       "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -29,27 +26,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Microsoft.Common.CurrentVersion.targets",
-              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "ViewState": "AgIAAOYUAAAAAAAAAAAawBkVAABXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2026-02-20T10:40:45.849Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Form1.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs [Design]",
-              "RelativeToolTip": "MatrixTransformations\\Form1.cs [Design]",
+              "Title": "Cube.cs",
+              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
+              "RelativeDocumentMoniker": "MatrixTransformations\\Cube.cs",
+              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
+              "RelativeToolTip": "MatrixTransformations\\Cube.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T10:40:07.024Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2026-02-22T11:41:10.691Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -59,7 +45,7 @@
               "RelativeDocumentMoniker": "MatrixTransformations\\Form1.cs",
               "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
               "RelativeToolTip": "MatrixTransformations\\Form1.cs",
-              "ViewState": "AgIAALcBAAAAAAAAAAAkwMUBAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAF4AAAAAAAAAAADwv4sAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-20T10:08:34.723Z",
               "EditorCaption": ""
