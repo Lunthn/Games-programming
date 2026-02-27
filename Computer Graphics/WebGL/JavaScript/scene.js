@@ -66,7 +66,7 @@ for (let i = -4; i < 5; i += 2) {
     1.5 + (Math.random() - 0.5) * 1.5,
   );
   const hydrant = entityBuilder.buildFireHydrant();
-  hydrant.position.set(i + 0.8, 0.05, -0.8);
+  hydrant.position.set(i + 0.8, -0.05, -0.925);
 
   scene.add(house1, house2, tree1, tree2, hydrant);
 }

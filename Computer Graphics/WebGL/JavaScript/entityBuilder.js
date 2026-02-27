@@ -96,8 +96,12 @@ export function buildFireHydrant() {
 }
 
 export function buildStreet(length) {
-  // creating the texture of the streeet
+  const streetGroup = new THREE.Group();
   const loader = new THREE.TextureLoader();
+  const posY = -0.12;
+  const posZ = 0.75;
+
+  // creating the texture of the streeet
   const streetTexture = loader.load("Textures/street-texture.jpg");
   const streetMat = new THREE.MeshStandardMaterial({ map: streetTexture });
 
@@ -111,9 +115,36 @@ export function buildStreet(length) {
   const streetGeom = new THREE.BoxGeometry(length, 1, 0.01);
   const street = new THREE.Mesh(streetGeom, streetMat);
   street.rotation.x = -Math.PI / 2;
+  street.position.y = posY;
   street.receiveShadow = true;
+  streetGroup.add(street);
 
-  return street;
+  // creating the texture of the sidewalk
+  const sidewalkTexture = loader.load("Textures/sidewalk-texture.jpg")
+  const sidewalkMat = new THREE.MeshStandardMaterial({ map: sidewalkTexture })
+
+  // setting the properties of the texture
+  sidewalkTexture.wrapS = THREE.RepeatWrapping;
+  sidewalkTexture.wrapT = THREE.RepeatWrapping;
+  sidewalkTexture.repeat.set(length / 1, 1);
+
+  // creating the sidewalk
+  const sidewalkGeom = new THREE.BoxGeometry(length, .5, 0.03);
+  const sidewalk = new THREE.Mesh(sidewalkGeom, sidewalkMat);
+  sidewalk.rotation.x = -Math.PI / 2;
+  sidewalk.receiveShadow = true;
+
+  // duplicating sidewalk and setting positions
+  const sidewalk2 = sidewalk.clone();
+  sidewalk.position.y = posY;
+  sidewalk2.position.y = posY;
+  sidewalk.position.z = -posZ;
+  sidewalk2.position.z = posZ;
+
+  streetGroup.add(sidewalk);
+  streetGroup.add(sidewalk2);
+
+  return streetGroup;
 }
 
 export function buildTree() {
