@@ -3,7 +3,7 @@ import * as entityBuilder from "./entityBuilder.js"; // needed for adding entiti
 // create scene and skybox
 const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
-const skyTexture = textureLoader.load("Fuzzy_Sky-Blue_01-1024x512.png");
+const skyTexture = textureLoader.load("Textures/Fuzzy_Sky-Blue_01-1024x512.png");
 skyTexture.mapping = THREE.EquirectangularReflectionMapping;
 scene.background = skyTexture;
 
@@ -41,10 +41,12 @@ let { sun, light } = entityBuilder.buildSun(
 );
 scene.add(sun, light);
 
+// create ground
 const boundary = 8;
 let { grass, ground } = entityBuilder.buildGround(boundary);
 scene.add(grass, ground);
 
+// add houses, trees and firehydrants
 for (let i = -4; i < 5; i += 2) {
   const house1 = entityBuilder.buildHouse();
   house1.position.set(i, 0, -3);
@@ -87,6 +89,7 @@ corners.forEach(([x, z]) => {
   window.monuments.push(cornerMonument);
 });
 
+// add streets
 const street = entityBuilder.buildStreet(10);
 scene.add(street);
 

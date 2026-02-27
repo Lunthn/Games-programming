@@ -19,7 +19,7 @@ export function buildHouse() {
   const gltfLoader = new THREE.GLTFLoader();
 
   // load the house
-  gltfLoader.load("Suburban Houses Pack-glb/" + randomHouseString, (gltf) => {
+  gltfLoader.load("Models/Suburban Houses Pack-glb/" + randomHouseString, (gltf) => {
     const houseModel = gltf.scene;
 
     houseModel.traverse((child) => {
@@ -98,7 +98,7 @@ export function buildFireHydrant() {
 export function buildStreet(length) {
   // creating the texture of the streeet
   const loader = new THREE.TextureLoader();
-  const streetTexture = loader.load("street-texture.jpg");
+  const streetTexture = loader.load("Textures/street-texture.jpg");
   const streetMat = new THREE.MeshStandardMaterial({ map: streetTexture });
 
   // setting the properties of the texture
@@ -121,7 +121,7 @@ export function buildTree() {
   const gltfLoader = new THREE.GLTFLoader();
 
   // load the tree model
-  gltfLoader.load("City Pack-glb/Tree.glb", (gltf) => {
+  gltfLoader.load("Models/City Pack-glb/Tree.glb", (gltf) => {
     const tree = gltf.scene;
 
     tree.traverse((child) => {
@@ -162,6 +162,7 @@ export function buildSun(x, y, z) {
 export function buildMonument() {
   const monumentGroup = new THREE.Group();
 
+  // create monument base geometry
   const baseGeometry = new THREE.CylinderGeometry(1.15, 1, 5, 32);
   const base = new THREE.Mesh(
     baseGeometry,
@@ -171,6 +172,7 @@ export function buildMonument() {
   base.receiveShadow = true;
   monumentGroup.add(base);
 
+  // create monument art geometry
   const artGeometry = new THREE.TorusGeometry(10, 3, 100, 16);
   const art = new THREE.Mesh(artGeometry, new THREE.MeshNormalMaterial());
   art.receiveShadow = true;
@@ -179,8 +181,9 @@ export function buildMonument() {
   art.position.y = 4;
   monumentGroup.add(art);
 
+  // this is what you think it is
   const gltf = new THREE.GLTFLoader();
-  gltf.load("teapot.glb", (gltf) => {
+  gltf.load("Models/teapot.glb", (gltf) => {
     const teapot = gltf.scene;
 
     teapot.scale.setScalar(0.3);
