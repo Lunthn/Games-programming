@@ -46,25 +46,35 @@ const boundary = 8;
 let { grass, ground } = entityBuilder.buildGround(boundary);
 scene.add(grass, ground);
 
+// properties for houses and trees
+const housePosZ = 3;
+const treePosY = -0.15;
+const treePosZ = 1.5;
+const treeRandomPos = 0.7;
+
 // add houses, trees and firehydrants
 for (let i = -4; i < 5; i += 2) {
   const house1 = entityBuilder.buildHouse();
-  house1.position.set(i, 0, -3);
+  house1.position.set(i, 0, -housePosZ);
   house1.rotation.y = Math.PI;
+
   const house2 = entityBuilder.buildHouse();
-  house2.position.set(i, 0, 3);
+  house2.position.set(i, 0, housePosZ);
+
   const tree1 = entityBuilder.buildTree();
   tree1.position.set(
-    i + 1 + (Math.random() - 0.5) * 0.5,
-    0,
-    -1.5 + (Math.random() - 0.5) * 1.5,
+    i + 1 + (Math.random() - treeRandomPos) * treeRandomPos,
+    treePosY,
+    -treePosZ + (Math.random() - treeRandomPos) * treeRandomPos,
   );
+
   const tree2 = entityBuilder.buildTree();
   tree2.position.set(
-    i - 1 + (Math.random() - 0.5) * 0.5,
-    0,
-    1.5 + (Math.random() - 0.5) * 1.5,
+    i - 1 + (Math.random() - treeRandomPos) * treeRandomPos,
+    treePosY,
+    treePosZ + (Math.random() - treeRandomPos) * treeRandomPos,
   );
+  
   const hydrant = entityBuilder.buildFireHydrant();
   hydrant.position.set(i + 0.8, -0.05, -0.925);
 
