@@ -3,7 +3,9 @@ import * as entityBuilder from "./entityBuilder.js"; // needed for adding entiti
 // create scene and skybox
 const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
-const skyTexture = textureLoader.load("Textures/Fuzzy_Sky-Blue_01-1024x512.png");
+const skyTexture = textureLoader.load(
+  "Textures/Fuzzy_Sky-Blue_01-1024x512.png",
+);
 skyTexture.mapping = THREE.EquirectangularReflectionMapping;
 scene.background = skyTexture;
 
@@ -55,11 +57,11 @@ const treeRandomPos = 0.7;
 // add houses, trees and firehydrants
 for (let i = -4; i < 5; i += 2) {
   const house1 = await entityBuilder.buildHouse();
-  house1.position.set(i, 0, -housePosZ);
+  house1.position.set(i, -0.1, -housePosZ);
   house1.rotation.y = Math.PI;
 
   const house2 = await entityBuilder.buildHouse();
-  house2.position.set(i, 0, housePosZ);
+  house2.position.set(i, -0.1, housePosZ);
 
   const tree1 = await entityBuilder.buildTree();
   tree1.position.set(
@@ -74,7 +76,7 @@ for (let i = -4; i < 5; i += 2) {
     treePosY,
     treePosZ + (Math.random() - treeRandomPos) * treeRandomPos,
   );
-  
+
   const hydrant = entityBuilder.buildFireHydrant();
   hydrant.position.set(i + 0.8, -0.05, -0.925);
 
