@@ -10,28 +10,26 @@ const houses = [
   "Two story house6.glb",
 ];
 
-export function buildHouse() {
+// initialize loaders
+const gltfLoader = new THREE.GLTFLoader();
+const textureLoader = new THREE.TextureLoader();
+
+export async function buildHouse() {
   // randomly select a house from the array
   const randomHouseIndex = Math.floor(Math.random() * houses.length);
   const randomHouseString = houses[randomHouseIndex];
 
-  const houseGroup = new THREE.Group();
-  const gltfLoader = new THREE.GLTFLoader();
-
   // load the house
-  gltfLoader.load("Models/Suburban Houses Pack-glb/" + randomHouseString, (gltf) => {
-    const houseModel = gltf.scene;
+  const gltf = await gltfLoader.loadAsync("Models/Suburban Houses Pack-glb/" + randomHouseString)
+  const house = gltf.scene;
 
-    houseModel.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-      }
-    });
-
-    houseGroup.add(houseModel);
+  house.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+    }
   });
 
-  return houseGroup;
+  return house;
 }
 
 export function buildFireHydrant() {
@@ -97,12 +95,11 @@ export function buildFireHydrant() {
 
 export function buildStreet(length) {
   const streetGroup = new THREE.Group();
-  const loader = new THREE.TextureLoader();
   const posY = -0.12;
   const posZ = 0.75;
 
   // creating the texture of the streeet
-  const streetTexture = loader.load("Textures/street-texture.jpg");
+  const streetTexture = textureLoader.load("Textures/street-texture.jpg");
   const streetMat = new THREE.MeshStandardMaterial({ map: streetTexture });
 
   // setting the properties of the texture
@@ -120,7 +117,7 @@ export function buildStreet(length) {
   streetGroup.add(street);
 
   // creating the texture of the sidewalk
-  const sidewalkTexture = loader.load("Textures/sidewalk-texture.jpg")
+  const sidewalkTexture = textureLoader.load("Textures/sidewalk-texture.jpg")
   const sidewalkMat = new THREE.MeshStandardMaterial({ map: sidewalkTexture })
 
   // setting the properties of the texture
@@ -147,26 +144,21 @@ export function buildStreet(length) {
   return streetGroup;
 }
 
-export function buildTree() {
-  const treeGroup = new THREE.Group();
-  const gltfLoader = new THREE.GLTFLoader();
-
+export async function buildTree() {
   // load the tree model
-  gltfLoader.load("Models/City Pack-glb/Tree.glb", (gltf) => {
-    const tree = gltf.scene;
+  const gltf = await gltfLoader.loadAsync("Models/City Pack-glb/Tree.glb")
+  const tree = gltf.scene;
 
-    tree.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-      }
-    });
-
-    treeGroup.add(tree);
+  tree.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+    }
   });
 
   // adjust scaling to compensate for model size
-  treeGroup.scale.set(0.002, 0.002, 0.002);
-  return treeGroup;
+  tree.scale.set(0.002, 0.002, 0.002);
+  
+  return tree;
 }
 
 export function buildSun(x, y, z) {
@@ -213,8 +205,7 @@ export function buildMonument() {
   monumentGroup.add(art);
 
   // this is what you think it is
-  const gltf = new THREE.GLTFLoader();
-  gltf.load("Models/teapot.glb", (gltf) => {
+  gltfLoader.load("Models/teapot.glb", (gltf) => {
     const teapot = gltf.scene;
 
     teapot.scale.setScalar(0.3);
@@ -261,4 +252,44 @@ export function buildGround(boundary) {
   grass.receiveShadow = true;
 
   return { grass, ground };
+}
+
+export async function buildBench(){
+  const gltf = await gltfLoader.loadAsync("Models/City Pack-glb/Bench.glb");
+  const bench = gltf.scene;
+
+  bench.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+
+      if(child.name == "Node-Mesh"){ // set material of planks
+        child.material = new THREE.MeshLambertMaterial({ color: "brown" })
+      }
+      else if(child.name == "Node-Mesh_1"){ // set material of stand
+        child.material = new THREE.MeshStandardMaterial({ color: "white", metalness: 1, roughness: 1 })
+      }
+    }
+  });
+
+  bench.scale.setScalar(0.15);
+  bench.position.set(0, 0.025, 0.925);
+
+  return bench;
+}
+
+export async function buildTrashCan(){
+  const gltf = await gltfLoader.loadAsync("Models/City Pack-glb/Trash Can.glb");
+  const trashCan = gltf.scene;
+
+  trashCan.traverse((child) => {
+    if(child.isMesh) {
+      child.castShadow = true;
+      child.material = new THREE.MeshStandardMaterial({ color: "gray", metalness: 0, roughness: 1 });
+    }
+  });
+
+  trashCan.scale.setScalar(0.05);
+  trashCan.position.set(0.35, 0.01, 0.925);
+
+  return trashCan;
 }
