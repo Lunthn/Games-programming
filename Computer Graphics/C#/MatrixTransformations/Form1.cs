@@ -11,22 +11,35 @@ namespace MatrixTransformations
     public partial class Form1 : Form
     {
         // Window dimensions
-        private const int WIDTH = 1200;
 
+        private const int WIDTH = 1200;
         private const int HEIGHT = 700;
 
-        // Axes
-        private AxisX x_axis;
+        // Magic number constants
 
+        private const int FADE_ALPHA = 80;
+        private const int ASCII_MIN = 33;
+        private const int ASCII_MAX = 127;
+        private const float TRANSLATE_STEP = 0.1f;
+        private const float ROTATE_STEP = 1f;
+        private const float SCALE_STEP = 0.1f;
+        private const float CAMERA_R_STEP = 1f;
+        private const float CAMERA_D_STEP = 20f;
+        private const float CAMERA_ANGLE_STEP = 1f;
+
+        // Axes
+
+        private AxisX x_axis;
         private AxisY y_axis;
         private AxisZ z_axis;
 
         // Objects
+
         private Cube cube;
 
         // Values
-        private float d = 800;
 
+        private float d = 800;
         private float r = 10;
         private float theta = -100;
         private float phi = -10;
@@ -40,28 +53,28 @@ namespace MatrixTransformations
 
         private int phase = 0;
         private int phasePart = 0;
-
         private Timer animationTimer;
         private bool animationIsPlaying = false;
-
-        private bool enteredMatrix = false;
-        private Color currentTextColor = Color.Black;
 
         private List<Vector> stars;
         private int starsAmount = 200;
 
+        private Color currentTextColor = Color.Black;
         private Bitmap canvas;
         private Graphics canvasGraphics;
 
+        private bool enteredMatrix = false;
         private bool hideDebug = false;
 
-        // Dit is een Windows API functie waarmee we de titelbalk kunnen aanpassen aan onze "fancy mode"
+        private Random rng = new Random();
+
+        // Windows API for dark title bar support
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
-        // Helper methode om de titelbalk kleur te wisselen
+        // Toggles the title bar between light and dark mode
         private void SetDarkModeTitleBar(bool enabled)
         {
             int useDarkMode = enabled ? 1 : 0;
@@ -86,7 +99,6 @@ namespace MatrixTransformations
             cube = new Cube(Color.Purple);
 
             // Fill the world with stars to enhance the sense of depth
-            Random rng = new Random();
             this.stars = new List<Vector>();
 
             for (int i = 0; i < starsAmount; i++)
@@ -97,6 +109,7 @@ namespace MatrixTransformations
                 stars.Add(new Vector(x, y, z));
             }
 
+            // Set up animation timer
             this.animationTimer = new Timer();
             animationTimer.Interval = 50;
             animationTimer.Tick += (s, e) =>
@@ -108,6 +121,7 @@ namespace MatrixTransformations
                 }
             };
 
+            // Off-screen canvas used for the fading trail effect in matrix mode
             canvas = new Bitmap(WIDTH, HEIGHT);
             canvasGraphics = Graphics.FromImage(canvas);
             canvasGraphics.Clear(Color.Black);
@@ -115,57 +129,77 @@ namespace MatrixTransformations
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            Graphics g = enteredMatrix ? canvasGraphics : e.Graphics;
+
             if (enteredMatrix)
             {
-                using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(80, Color.Black)))
-                {
-                    canvasGraphics.FillRectangle(fadeBrush, 0, 0, WIDTH, HEIGHT);
-                }
-
-                DrawStars(canvasGraphics);
-
-                if (!hideDebug)
-                {
-                    x_axis.Draw(canvasGraphics, ViewingPipeline(x_axis.vertexbuffer));
-                    y_axis.Draw(canvasGraphics, ViewingPipeline(y_axis.vertexbuffer));
-                    z_axis.Draw(canvasGraphics, ViewingPipeline(z_axis.vertexbuffer));
-                }
-
-                cube.Draw(canvasGraphics, ViewingPipeline(TransformCube(cube.vertexbuffer)), currentTextColor, hideDebug);
-
-                e.Graphics.DrawImage(canvas, 0, 0);
+                // Overlay semi-transparent black to fade previous frames (motion trail effect)
+                using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(FADE_ALPHA, Color.Black)))
+                    g.FillRectangle(fadeBrush, 0, 0, WIDTH, HEIGHT);
             }
             else
             {
-                e.Graphics.Clear(Color.White);
+                g.Clear(Color.White);
+            }
 
-                if (!hideDebug)
-                {
-                    x_axis.Draw(e.Graphics, ViewingPipeline(x_axis.vertexbuffer));
-                    y_axis.Draw(e.Graphics, ViewingPipeline(y_axis.vertexbuffer));
-                    z_axis.Draw(e.Graphics, ViewingPipeline(z_axis.vertexbuffer));
-                }
+            if (!hideDebug) DrawAxes(g);
 
-                cube.Draw(e.Graphics, ViewingPipeline(TransformCube(cube.vertexbuffer)), currentTextColor);
+            cube.Draw(g, ViewingPipeline(TransformModel(cube.vertexbuffer)), currentTextColor, hideDebug);
+
+            if (enteredMatrix)
+            {
+                DrawStars(g);
+                e.Graphics.DrawImage(canvas, 0, 0);
             }
 
             DrawInfo(e.Graphics);
         }
 
+        private void DrawAxes(Graphics g)
+        {
+            x_axis.Draw(g, ViewingPipeline(x_axis.vertexbuffer));
+            y_axis.Draw(g, ViewingPipeline(y_axis.vertexbuffer));
+            z_axis.Draw(g, ViewingPipeline(z_axis.vertexbuffer));
+        }
+
+        // Centralizes all visual theme changes for matrix mode
+        private void SetMatrixMode(bool enabled)
+        {
+            enteredMatrix = enabled;
+            canvasGraphics.Clear(Color.Black);
+
+            if (enabled)
+            {
+                currentTextColor = Color.Green;
+                cube.color = Color.Green;
+                this.Text = "=== MATRIX_MAIN_FRAME ===";
+                SetDarkModeTitleBar(true);
+            }
+            else
+            {
+                canvasGraphics.Clear(Color.Black);
+                currentTextColor = Color.Black;
+                cube.color = Color.Purple;
+                this.Text = "Matrix Transformations";
+                SetDarkModeTitleBar(false);
+            }
+        }
+
+        // Draws random ASCII characters at projected star positions for the matrix rain effect
         private void DrawStars(Graphics g)
         {
-            Random rng = new Random();
             using (Font matrixFont = new Font("Consolas", 8, FontStyle.Bold))
             {
                 var projectedStars = ViewingPipeline(stars);
                 foreach (var star in projectedStars)
                 {
-                    char randomChar = (char)rng.Next(33, 127);
+                    char randomChar = (char)rng.Next(ASCII_MIN, ASCII_MAX);
                     g.DrawString(randomChar.ToString(), matrixFont, Brushes.Green, star.x, star.y);
                 }
             }
         }
 
+        // Animation based on requirements
         private void Animate()
         {
             if (phase == 1)
@@ -233,7 +267,8 @@ namespace MatrixTransformations
             }
         }
 
-        public List<Vector> TransformCube(List<Vector> vertexbuffer)
+        // Applies scale, rotation, and translation transforms to the cube's vertices
+        public List<Vector> TransformModel(List<Vector> vertexbuffer)
         {
             var result = new List<Vector>();
 
@@ -243,6 +278,7 @@ namespace MatrixTransformations
             var rotateMatrixZ = Matrix.RotateMatrixZ(this.rotZ);
             var translateMatrix = Matrix.TranslateMatrix(new Vector(posX, posY, posZ));
 
+            // Combine transforms: T * Rz * Ry * Rx * S
             var totalMatrix = translateMatrix * rotateMatrixZ * rotateMatrixY * rotateMatrixX * scaleMatrix;
 
             foreach (Vector v in vertexbuffer)
@@ -254,6 +290,7 @@ namespace MatrixTransformations
             return result;
         }
 
+        // Applies view transform, perspective projection, and viewport mapping
         public List<Vector> ViewingPipeline(List<Vector> vertexbuffer)
         {
             var viewMatrix = Matrix.ViewMatrix(r, theta, phi);
@@ -338,6 +375,7 @@ namespace MatrixTransformations
             }
         }
 
+        // Converts normalized 2D coordinates to screen space
         public static List<Vector> ViewportTransformation(List<Vector> vb)
         {
             float delta_x = WIDTH / 2;
@@ -348,14 +386,14 @@ namespace MatrixTransformations
             foreach (Vector v in vb)
             {
                 float newX = v.x + delta_x;
-                float newY = delta_y - v.y;
+                float newY = delta_y - v.y; // Flip Y so positive is up
                 result.Add(new Vector(newX, newY));
             }
 
             return result;
         }
 
-        private void ResetValues(bool onlyDimensions = false)
+        private void ResetTransforms()
         {
             posX = 0f;
             posY = 0f;
@@ -373,18 +411,6 @@ namespace MatrixTransformations
             theta = -100f;
 
             canvasGraphics.Clear(Color.Black);
-
-            if (!onlyDimensions)
-            {
-                this.Text = "Matrix Transformations";
-                SetDarkModeTitleBar(false);
-
-                enteredMatrix = false;
-                hideDebug = false;
-
-                currentTextColor = Color.Black;
-                cube.color = Color.Purple;
-            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -394,106 +420,107 @@ namespace MatrixTransformations
 
             if (e.KeyCode == Keys.Left)
             {
-                posX -= 0.1f;
+                posX -= TRANSLATE_STEP;
             }
             else if (e.KeyCode == Keys.Right)
             {
-                posX += 0.1f;
+                posX += TRANSLATE_STEP;
             }
 
             if (e.KeyCode == Keys.Down)
             {
-                posY -= 0.1f;
+                posY -= TRANSLATE_STEP;
             }
             else if (e.KeyCode == Keys.Up)
             {
-                posY += 0.1f;
+                posY += TRANSLATE_STEP;
             }
 
             if (e.KeyCode == Keys.PageDown)
             {
-                posZ -= 0.1f;
+                posZ -= TRANSLATE_STEP;
             }
             else if (e.KeyCode == Keys.PageUp)
             {
-                posZ += 0.1f;
+                posZ += TRANSLATE_STEP;
             }
 
             if (e.KeyCode == Keys.X && !e.Shift)
             {
-                rotX -= 1f;
+                rotX -= ROTATE_STEP;
             }
             else if (e.KeyCode == Keys.X && e.Shift)
             {
-                rotX += 1f;
+                rotX += ROTATE_STEP;
             }
 
             if (e.KeyCode == Keys.Y && !e.Shift)
             {
-                rotY -= 1f;
+                rotY -= ROTATE_STEP;
             }
             else if (e.KeyCode == Keys.Y && e.Shift)
             {
-                rotY += 1f;
+                rotY += ROTATE_STEP;
             }
 
             if (e.KeyCode == Keys.Z && !e.Shift)
             {
-                rotZ -= 1f;
+                rotZ -= ROTATE_STEP;
             }
             else if (e.KeyCode == Keys.Z && e.Shift)
             {
-                rotZ += 1f;
+                rotZ += ROTATE_STEP;
             }
 
             if (e.KeyCode == Keys.S && !e.Shift)
             {
-                scale -= 0.1f;
+                scale -= SCALE_STEP;
             }
             else if (e.KeyCode == Keys.S && e.Shift)
             {
-                scale += 0.1f;
+                scale += SCALE_STEP;
             }
 
             if (e.KeyCode == Keys.R && !e.Shift)
             {
-                r -= 1f;
+                r -= CAMERA_R_STEP;
             }
             else if (e.KeyCode == Keys.R && e.Shift)
             {
-                r += 1f;
+                r += CAMERA_R_STEP;
             }
 
             if (e.KeyCode == Keys.D && !e.Shift)
             {
-                d -= 20f;
+                d -= CAMERA_D_STEP;
             }
             else if (e.KeyCode == Keys.D && e.Shift)
             {
-                d += 20f;
+                d += CAMERA_D_STEP;
             }
 
             if (e.KeyCode == Keys.P && !e.Shift)
             {
-                phi -= 1f;
+                phi -= CAMERA_ANGLE_STEP;
             }
             else if (e.KeyCode == Keys.P && e.Shift)
             {
-                phi += 1f;
+                phi += CAMERA_ANGLE_STEP;
             }
 
             if (e.KeyCode == Keys.T && !e.Shift)
             {
-                theta -= 1f;
+                theta -= CAMERA_ANGLE_STEP;
             }
             else if (e.KeyCode == Keys.T && e.Shift)
             {
-                theta += 1f;
+                theta += CAMERA_ANGLE_STEP;
             }
 
             if (e.KeyCode == Keys.C)
             {
-                ResetValues();
+                ResetTransforms();
+                SetMatrixMode(false);
             }
 
             if (e.KeyCode == Keys.A)
@@ -511,35 +538,21 @@ namespace MatrixTransformations
                     animationTimer.Stop();
                     phase = 0;
                     phasePart = 0;
-                    ResetValues(true);
+
+                    ResetTransforms();
                 }
             }
 
+            // Toggle matrix visual mode (green theme + dark title bar)
             if (e.KeyCode == Keys.F)
             {
-                enteredMatrix = !enteredMatrix;
-
-                if (!enteredMatrix)
-                {
-                    canvasGraphics.Clear(Color.Black);
-                    currentTextColor = Color.Black;
-                    cube.color = Color.Purple;
-
-                    this.Text = "Matrix Transformations";
-                    SetDarkModeTitleBar(false);
-                }
-                else
-                {
-                    currentTextColor = Color.Green;
-                    cube.color = Color.Green;
-                    this.Text = "=== MATRIX_MAIN_FRAME ===";
-                    SetDarkModeTitleBar(true);
-                }
+                SetMatrixMode(!enteredMatrix);
             }
 
             if (e.KeyCode == Keys.M)
             {
                 hideDebug = !hideDebug;
+                canvasGraphics.Clear(Color.Black);
             }
 
             Invalidate();

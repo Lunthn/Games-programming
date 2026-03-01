@@ -7,8 +7,20 @@
       "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\axisz.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\axisz.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,14 +39,54 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Program.cs",
+              "RelativeDocumentMoniker": "MatrixTransformations\\Program.cs",
+              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Program.cs",
+              "RelativeToolTip": "MatrixTransformations\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T13:50:17.836Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AxisZ.cs",
+              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\AxisZ.cs",
+              "RelativeDocumentMoniker": "MatrixTransformations\\AxisZ.cs",
+              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\AxisZ.cs",
+              "RelativeToolTip": "MatrixTransformations\\AxisZ.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T13:50:16.77Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Matrix.cs",
+              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
+              "RelativeDocumentMoniker": "MatrixTransformations\\Matrix.cs",
+              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
+              "RelativeToolTip": "MatrixTransformations\\Matrix.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAgwCoAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T13:48:36.855Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Cube.cs",
               "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
               "RelativeDocumentMoniker": "MatrixTransformations\\Cube.cs",
               "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
               "RelativeToolTip": "MatrixTransformations\\Cube.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T11:41:10.691Z"
+              "WhenOpened": "2026-02-22T11:41:10.691Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -44,7 +96,7 @@
               "RelativeDocumentMoniker": "MatrixTransformations\\Form1.cs",
               "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
               "RelativeToolTip": "MatrixTransformations\\Form1.cs",
-              "ViewState": "AgIAAN4AAAAAAAAAAAAQwKUAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-20T10:08:34.723Z",
               "EditorCaption": ""
