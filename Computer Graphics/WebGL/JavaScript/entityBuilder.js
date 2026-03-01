@@ -289,7 +289,7 @@ export async function buildTrashCan(){
   });
 
   trashCan.scale.setScalar(0.05);
-  trashCan.position.set(0.35, 0.01, 0.925);
+  trashCan.position.set(0.35, -0.01, 0.925);
 
   return trashCan;
 }

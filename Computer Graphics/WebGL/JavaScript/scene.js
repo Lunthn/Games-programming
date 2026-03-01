@@ -49,6 +49,7 @@ let { grass, ground } = entityBuilder.buildGround(boundary);
 scene.add(grass, ground);
 
 // properties for houses and trees
+const housePosY = -0.1;
 const housePosZ = 3;
 const treePosY = -0.15;
 const treePosZ = 1.5;
@@ -57,11 +58,11 @@ const treeRandomPos = 0.7;
 // add houses, trees and firehydrants
 for (let i = -4; i < 5; i += 2) {
   const house1 = await entityBuilder.buildHouse();
-  house1.position.set(i, -0.1, -housePosZ);
+  house1.position.set(i, housePosY, -housePosZ);
   house1.rotation.y = Math.PI;
 
   const house2 = await entityBuilder.buildHouse();
-  house2.position.set(i, -0.1, housePosZ);
+  house2.position.set(i, housePosY, housePosZ);
 
   const tree1 = await entityBuilder.buildTree();
   tree1.position.set(
