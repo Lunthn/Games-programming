@@ -146,8 +146,8 @@
             Matrix result = Identity();
 
             result.mat[1, 1] = cos;
-            result.mat[2, 1] = sin;
             result.mat[1, 2] = -sin;
+            result.mat[2, 1] = sin;
             result.mat[2, 2] = cos;
 
             return result;
@@ -177,7 +177,14 @@
             float sin = (float)Math.Sin(theta);
             float cos = (float)Math.Cos(theta);
 
-            return new Matrix(cos, -sin, sin, cos);
+            Matrix result = Identity();
+
+            result.mat[0, 0] = cos;
+            result.mat[0, 1] = -sin;
+            result.mat[1, 0] = sin;
+            result.mat[1, 1] = cos;
+
+            return result;
         }
 
         public static Matrix TranslateMatrix(Vector t)

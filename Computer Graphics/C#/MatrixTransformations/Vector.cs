@@ -17,7 +17,7 @@ namespace MatrixTransformations
             this.x = x;
             this.y = y;
             this.z = z;
-            this.w = 1; // translation component
+            this.w = 1;
         }
 
         public static Vector operator +(Vector v1, Vector v2)

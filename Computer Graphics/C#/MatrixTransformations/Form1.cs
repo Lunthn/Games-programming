@@ -1,9 +1,4 @@
-using System.CodeDom;
-using System.ComponentModel.Design;
-using System.DirectoryServices;
-using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
-using System.Text;
 using Timer = System.Windows.Forms.Timer;
 
 namespace MatrixTransformations
@@ -142,7 +137,10 @@ namespace MatrixTransformations
                 g.Clear(Color.White);
             }
 
-            if (!hideDebug) DrawAxes(g);
+            if (!hideDebug)
+            {
+                DrawAxes(g);
+            }
 
             cube.Draw(g, ViewingPipeline(TransformModel(cube.vertexbuffer)), currentTextColor, hideDebug);
 
