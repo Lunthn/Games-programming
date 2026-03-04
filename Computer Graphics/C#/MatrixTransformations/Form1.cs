@@ -24,30 +24,24 @@ namespace MatrixTransformations
 
         // Axes
 
-        private AxisX x_axis;
-        private AxisY y_axis;
-        private AxisZ z_axis;
+        private Axis x_axis = new Axis(3, 0, 0, "x", Color.Red);
+        private Axis y_axis = new Axis(0, 3, 0, "y", Color.Green);
+        private Axis z_axis = new Axis(0, 0, 3, "z", Color.Blue);
 
         // Objects
 
-        private Cube cube;
-
-        // Values
+        private Cube cube = new Cube(Color.Purple, Color.Black);
 
         private float d = 800;
         private float r = 10;
         private float theta = -100;
         private float phi = -10;
-        private float posX = 0;
-        private float posY = 0;
-        private float posZ = 0;
-        private float rotX = 0;
-        private float rotY = 0;
-        private float rotZ = 0;
+
+        private float posX, posY, posZ = 0;
+        private float rotX, rotY, rotZ = 0;
         private float scale = 1;
 
-        private int phase = 0;
-        private int phasePart = 0;
+        private int phase, phasePart = 0;
         private Timer animationTimer;
         private bool animationIsPlaying = false;
 
@@ -57,7 +51,6 @@ namespace MatrixTransformations
         private Color currentTextColor = Color.Black;
         private Bitmap canvas;
         private Graphics canvasGraphics;
-
         private bool enteredMatrix = false;
         private bool hideDebug = false;
 
@@ -84,14 +77,6 @@ namespace MatrixTransformations
             this.Height = HEIGHT;
             this.DoubleBuffered = true;
             this.Text = "Matrix Transformations";
-
-            // Define axes
-            x_axis = new AxisX(3);
-            y_axis = new AxisY(3);
-            z_axis = new AxisZ(3);
-
-            // Create objects
-            cube = new Cube(Color.Purple);
 
             // Fill the world with stars to enhance the sense of depth
             this.stars = new List<Vector>();
@@ -142,7 +127,7 @@ namespace MatrixTransformations
                 DrawAxes(g);
             }
 
-            cube.Draw(g, ViewingPipeline(TransformModel(cube.vertexbuffer)), currentTextColor, hideDebug);
+            cube.Draw(g, ViewingPipeline(TransformModel(cube.vertexbuffer)), hideDebug);
 
             if (enteredMatrix)
             {
@@ -169,15 +154,20 @@ namespace MatrixTransformations
             if (enabled)
             {
                 currentTextColor = Color.Green;
+
                 cube.color = Color.Green;
+                cube.labelColor = currentTextColor;
+
                 this.Text = "=== MATRIX_MAIN_FRAME ===";
                 SetDarkModeTitleBar(true);
             }
             else
             {
-                canvasGraphics.Clear(Color.Black);
                 currentTextColor = Color.Black;
+
                 cube.color = Color.Purple;
+                cube.labelColor = currentTextColor;
+
                 this.Text = "Matrix Transformations";
                 SetDarkModeTitleBar(false);
             }
