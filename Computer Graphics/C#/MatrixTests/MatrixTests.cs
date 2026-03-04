@@ -176,7 +176,7 @@ namespace MatrixTransformations.Tests
         }
 
         [Fact]
-        public void TranslateMatrix_ShouldSetLastColumn()
+        public void TranslateMatrix_ReturnsTranslationMatrix()
         {
             var translation = new Vector(10, -5, 3); 
             var matrix = Matrix.TranslateMatrix(translation);
@@ -189,7 +189,7 @@ namespace MatrixTransformations.Tests
         }
 
         [Fact]
-        public void ViewMatrix_AtOrigin_ShouldMatchExpectedOrientation()
+        public void ViewMatrix_ReturnsViewMatrix()
         {
             float r = 10f;
             float theta = 0f;
@@ -204,7 +204,7 @@ namespace MatrixTransformations.Tests
         }
 
         [Fact]
-        public void ProjectMatrix_ShouldApplyPerspectiveScaling()
+        public void ProjectMatrix_ReturnsProjectionMatrix()
         {
             float d = 100f;
             float vz = 200f;

@@ -50,7 +50,7 @@ namespace MatrixTransformations.Tests
         }
 
         [Fact]
-        public void Multiply_TwoVectors_ReturnsComponentWiseProduct()
+        public void Multiply_TwoVectors_ReturnsCorrectVector()
         {
             var result = new Vector(2f, 3f, 4f) * new Vector(5f, 6f, 7f);
 
@@ -58,7 +58,7 @@ namespace MatrixTransformations.Tests
         }
 
         [Fact]
-        public void Multiply_ScalarByVector_ReturnsScaledVector()
+        public void Multiply_VectorByFloat_ReturnsCorrectVectorr()
         {
             var result = 3f * new Vector(1f, 2f, 3f);
 
