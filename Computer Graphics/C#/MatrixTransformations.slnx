@@ -1,3 +1,4 @@
-﻿<Solution>
+<Solution>
+  <Project Path="MatrixTests/MatrixTests.csproj" Id="3c99362e-c1ae-49f4-b785-89ea5abe9586" />
   <Project Path="MatrixTransformations\MatrixTransformations.csproj" />
 </Solution>
