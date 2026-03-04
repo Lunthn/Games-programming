@@ -42,10 +42,10 @@ namespace MatrixTransformations
 
         public override string ToString()
         {
-            return "/" + x + "\\" + "\n" +
-                         y + "\n" +
-                   "\\" + z + "/" + "\n" +
-                      w + " <- translation component \n";
+            return  x + "\n" +
+                    y + "\n" +
+                    z + "\n" +
+                    w; 
         }
     }
 }

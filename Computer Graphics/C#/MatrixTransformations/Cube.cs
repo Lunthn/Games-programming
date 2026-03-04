@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace MatrixTransformations
 {
-    public class Cube
+    public class Cube : IModel
     {
         //          7----------4
         //         /|         /|

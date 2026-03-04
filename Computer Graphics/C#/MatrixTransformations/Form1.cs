@@ -1,3 +1,6 @@
+using System.Net;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Timer = System.Windows.Forms.Timer;
 
@@ -29,17 +32,13 @@ namespace MatrixTransformations
         private Axis z_axis = new Axis(0, 0, 3, "z", Color.Blue);
 
         // Objects
-
-        private Cube cube = new Cube(Color.Purple, Color.Black);
-
+        public List<RenderObject> renderObjects = new List<RenderObjects>();
+        public RenderObject selectedObject;
+    
         private float d = 800;
         private float r = 10;
         private float theta = -100;
         private float phi = -10;
-
-        private float posX, posY, posZ = 0;
-        private float rotX, rotY, rotZ = 0;
-        private float scale = 1;
 
         private int phase, phasePart = 0;
         private Timer animationTimer;
@@ -51,7 +50,7 @@ namespace MatrixTransformations
         private Color currentTextColor = Color.Black;
         private Bitmap canvas;
         private Graphics canvasGraphics;
-        private bool enteredMatrix = false;
+        private bool fancyModeEnabled = false;
         private bool hideDebug = false;
 
         private Random rng = new Random();
@@ -78,16 +77,13 @@ namespace MatrixTransformations
             this.DoubleBuffered = true;
             this.Text = "Matrix Transformations";
 
-            // Fill the world with stars to enhance the sense of depth
-            this.stars = new List<Vector>();
+            RenderObject cube = new (new Cube(Color.Purple, Color.Black), new TransformState());
 
-            for (int i = 0; i < starsAmount; i++)
-            {
-                float x = (float)(rng.NextDouble() * 20 - 10);
-                float y = (float)(rng.NextDouble() * 20 - 10);
-                float z = (float)(rng.NextDouble() * 20 - 10);
-                stars.Add(new Vector(x, y, z));
-            }
+            selectedObject = cube;
+            renderObjects.Add(cube);
+
+            // Fill the world with stars to enhance the sense of depth
+            this.stars = GenerateStars();
 
             // Set up animation timer
             this.animationTimer = new Timer();
@@ -96,7 +92,7 @@ namespace MatrixTransformations
             {
                 if (animationIsPlaying)
                 {
-                    Animate();
+                    foreach(RenderObject renderObject in renderObjects) Animate(renderObject.transformState);
                     Invalidate();
                 }
             };
@@ -109,9 +105,9 @@ namespace MatrixTransformations
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = enteredMatrix ? canvasGraphics : e.Graphics;
+            Graphics g = fancyModeEnabled ? canvasGraphics : e.Graphics;
 
-            if (enteredMatrix)
+            if (fancyModeEnabled)
             {
                 // Overlay semi-transparent black to fade previous frames (motion trail effect)
                 using (SolidBrush fadeBrush = new SolidBrush(Color.FromArgb(FADE_ALPHA, Color.Black)))
@@ -127,9 +123,9 @@ namespace MatrixTransformations
                 DrawAxes(g);
             }
 
-            cube.Draw(g, ViewingPipeline(TransformModel(cube.vertexbuffer)), hideDebug);
+            foreach(RenderObject renderObject in renderObjects) renderObject.model.Draw(g, ViewingPipeline(TransformModel(renderObject.model.vertexbuffer)), hideDebug);
 
-            if (enteredMatrix)
+            if (fancyModeEnabled)
             {
                 DrawStars(g);
                 e.Graphics.DrawImage(canvas, 0, 0);
@@ -146,17 +142,20 @@ namespace MatrixTransformations
         }
 
         // Centralizes all visual theme changes for matrix mode
-        private void SetMatrixMode(bool enabled)
+        private void SetFancyMode(bool enabled)
         {
-            enteredMatrix = enabled;
+            fancyModeEnabled = enabled;
             canvasGraphics.Clear(Color.Black);
 
             if (enabled)
             {
                 currentTextColor = Color.Green;
 
-                cube.color = Color.Green;
-                cube.labelColor = currentTextColor;
+                foreach(RenderObject renderObject in renderObjects)
+                {
+                    renderObject.model.color = Color.Green;
+                    renderObject.model.labelColor = currentTextColor;
+                }
 
                 this.Text = "=== MATRIX_MAIN_FRAME ===";
                 SetDarkModeTitleBar(true);
@@ -165,8 +164,11 @@ namespace MatrixTransformations
             {
                 currentTextColor = Color.Black;
 
-                cube.color = Color.Purple;
-                cube.labelColor = currentTextColor;
+                foreach(RenderObject renderObject in renderObjects)
+                {
+                    renderObject.model.color = Color.Purple;
+                    renderObject.model.labelColor = currentTextColor;
+                }
 
                 this.Text = "Matrix Transformations";
                 SetDarkModeTitleBar(false);
@@ -188,22 +190,22 @@ namespace MatrixTransformations
         }
 
         // Animation based on requirements
-        private void Animate()
+        private void Animate(TransformState t)
         {
             if (phase == 1)
             {
                 theta -= 1f;
                 if (phasePart == 1)
                 {
-                    if (scale <= 1.5f) scale += 0.01f;
+                    if (t.Scale <= 1.5f) t.Scale += 0.01f;
                     else phasePart = 2;
                 }
                 else
                 {
-                    if (scale >= 1f) scale -= 0.01f;
+                    if (t.Scale >= 1f) t.Scale -= 0.01f;
                     else
                     {
-                        scale = 1;
+                        t.Scale = 1f;
                         phase = 2;
                         phasePart = 1;
                     }
@@ -214,15 +216,15 @@ namespace MatrixTransformations
                 theta -= 1f;
                 if (phasePart == 1)
                 {
-                    if (rotX <= 45f) rotX += 1f;
+                    if (t.RotX <= 45f) t.RotX += 1f;
                     else phasePart = 2;
                 }
                 else
                 {
-                    if (rotX >= 0f) rotX -= 1f;
+                    if (t.RotX >= 0f) t.RotX -= 1f;
                     else
                     {
-                        rotX = 0f;
+                        t.RotX = 0f;
                         phase = 3;
                         phasePart = 1;
                     }
@@ -233,15 +235,15 @@ namespace MatrixTransformations
                 phi += 1f;
                 if (phasePart == 1)
                 {
-                    if (rotY <= 45f) rotY += 1f;
+                    if (t.RotY <= 45f) t.RotY += 1f;
                     else phasePart = 2;
                 }
                 else
                 {
-                    if (rotY >= 0f) rotY -= 1f;
+                    if (t.RotY >= 0f) t.RotY -= 1f;
                     else
                     {
-                        rotY = 0f;
+                        t.RotY = 0f;
                         phase = 4;
                         phasePart = 1;
                     }
@@ -249,8 +251,8 @@ namespace MatrixTransformations
             }
             else
             {
-                if (theta != -100) theta += 1.0f;
-                if (phi != -10) phi -= 1.0f;
+                if (theta != -100) theta += 1f;
+                if (phi != -10) phi -= 1f;
                 if (phi == -10 && theta == -100) phase = 1;
             }
         }
@@ -260,11 +262,11 @@ namespace MatrixTransformations
         {
             var result = new List<Vector>();
 
-            var scaleMatrix = Matrix.ScaleMatrix(scale);
-            var rotateMatrixX = Matrix.RotateMatrixX(this.rotX);
-            var rotateMatrixY = Matrix.RotateMatrixY(this.rotY);
-            var rotateMatrixZ = Matrix.RotateMatrixZ(this.rotZ);
-            var translateMatrix = Matrix.TranslateMatrix(new Vector(posX, posY, posZ));
+            var scaleMatrix = Matrix.ScaleMatrix(selectedObject.transformState.Scale);
+            var rotateMatrixX = Matrix.RotateMatrixX(selectedObject.transformState.RotX);
+            var rotateMatrixY = Matrix.RotateMatrixY(selectedObject.transformState.RotY);
+            var rotateMatrixZ = Matrix.RotateMatrixZ(selectedObject.transformState.RotZ);
+            var translateMatrix = Matrix.TranslateMatrix(new Vector(selectedObject.transformState.PosX, selectedObject.transformState.PosY, selectedObject.transformState.PosZ));
 
             // Combine transforms: T * Rz * Ry * Rx * S
             var totalMatrix = translateMatrix * rotateMatrixZ * rotateMatrixY * rotateMatrixX * scaleMatrix;
@@ -297,73 +299,7 @@ namespace MatrixTransformations
             return ViewportTransformation(result);
         }
 
-        private void DrawInfo(Graphics g)
-        {
-            using (Font font = new Font(enteredMatrix ? "Consolas" : "Arial", 10, FontStyle.Bold))
-            using (Brush brush = new SolidBrush(currentTextColor))
-            {
-                float x = 20;
-                float y = 20;
-                float lineHeight = font.GetHeight(g) + 2;
-
-                string debugInfo = enteredMatrix ? $"> SYSTEM_DEBUG: {!hideDebug} [M]" : $"Hide debug/controls: {hideDebug} - M";
-                string resetInfo = enteredMatrix ? "> INITIALIZE_RESET [C]" : "Reset everything - C";
-
-                g.DrawString(debugInfo, font, brush, x, y);
-                g.DrawString(resetInfo, font, brush, x, y + lineHeight);
-
-                if (!hideDebug)
-                {
-                    List<string> labels = new List<string> {
-                        "",
-                        enteredMatrix ? $"[SCALE]      {scale:F2}" : $"Scale: {scale} - S/s",
-                        enteredMatrix ? $"[TRANS_X]    {posX:F1}"  : $"TranslateX: {posX} - Left/right",
-                        enteredMatrix ? $"[TRANS_Y]    {posY:F1}"  : $"TranslateY: {posY} - Up/down",
-                        enteredMatrix ? $"[TRANS_Z]    {posZ:F1}"  : $"TranslateZ: {posZ} - PgDn/PgUp",
-                        "",
-                        enteredMatrix ? $"[ROT_X]      {rotX:F0}°" : $"RotateX: {rotX} - X/x",
-                        enteredMatrix ? $"[ROT_Y]      {rotY:F0}°" : $"RotateY: {rotY} - Y/y",
-                        enteredMatrix ? $"[ROT_Z]      {rotZ:F0}°" : $"RotateZ: {rotZ} - Z/z",
-                        "",
-                        enteredMatrix ? $"[CAM_R]      {r:F1}"     : $"r: {r} - R/r",
-                        enteredMatrix ? $"[CAM_D]      {d:F0}"     : $"d: {d} - D/d",
-                        enteredMatrix ? $"[PHI]        {phi:F1}"   : $"phi: {phi} - P/p",
-                        enteredMatrix ? $"[THETA]      {theta:F1}" : $"theta: {theta} - T/t",
-                        "",
-                        enteredMatrix ? $"[ANIMATION]  {animationIsPlaying} [A]" : $"Animation: {animationIsPlaying} - A"
-                    };
-
-                    if (phase != 0)
-                    {
-                        labels.Add(enteredMatrix ? $">> CORE_PHASE_{phase}.{phasePart}" : $"Phase: {phase} (part: {phasePart})");
-                    }
-
-                    labels.Add("");
-
-                    for (int i = 0; i < labels.Count; i++)
-                    {
-                        g.DrawString(labels[i], font, brush, x, y + ((i + 2) * lineHeight));
-                    }
-
-                    float finalY = y + ((labels.Count + 2) * lineHeight);
-
-                    if (!enteredMatrix)
-                    {
-                        using (Brush alertBrush = new SolidBrush(Color.Red))
-                        using (font)
-                        {
-                            g.DrawString("TAKE THE RED PILL: PRESS [F]", font, alertBrush, x, finalY);
-                        }
-                    }
-                    else
-                    {
-                        g.DrawString($"> MATRIX: ONLINE [F]", font, brush, x, finalY);
-                    }
-                }
-            }
-        }
-
-        // Converts normalized 2D coordinates to screen space
+         // Converts normalized 2D coordinates to screen space
         public static List<Vector> ViewportTransformation(List<Vector> vb)
         {
             float delta_x = WIDTH / 2;
@@ -381,16 +317,72 @@ namespace MatrixTransformations
             return result;
         }
 
+        private void DrawInfo(Graphics g)
+        {
+            var t = selectedObject.transformState;
+
+            using (Font font = new Font(fancyModeEnabled ? "Consolas" : "Arial", 10, FontStyle.Bold))
+            using (Brush brush = new SolidBrush(currentTextColor))
+            {
+                float x = 20;
+                float y = 20;
+                float lineHeight = font.GetHeight(g) + 2;
+
+                string debugInfo = fancyModeEnabled ? $"> SYSTEM_DEBUG: {!hideDebug} [M]" : $"Hide debug/controls: {hideDebug} - M";
+                string resetInfo = fancyModeEnabled ? "> INITIALIZE_RESET [C]" : "Reset everything - C";
+
+                g.DrawString(debugInfo, font, brush, x, y);
+                g.DrawString(resetInfo, font, brush, x, y + lineHeight);
+
+                if (!hideDebug)
+                {
+                    List<string> labels = new List<string> {
+                        "",
+                        fancyModeEnabled ? $"[SELECTED SCALE]      {t.Scale:F2}" : $"Selected Scale: {t.Scale} - S/s",
+                        fancyModeEnabled ? $"[SELECTED TRANS_X]    {t.PosX:F1}"  : $"Selected TranslateX: {t.PosX} - Left/right",
+                        fancyModeEnabled ? $"[SELECTED TRANS_Y]    {t.PosY:F1}"  : $"Selected TranslateY: {t.PosY} - Up/down",
+                        fancyModeEnabled ? $"[SELECTED TRANS_Z]    {t.PosZ:F1}"  : $"Selected TranslateZ: {t.PosZ} - PgDn/PgUp",
+                        "",
+                        fancyModeEnabled ? $"[SELECTED ROT_X]      {t.RotX:F0}°" : $"Selected RotateX: {t.RotX} - X/x",
+                        fancyModeEnabled ? $"[SELECTED ROT_Y]      {t.RotY:F0}°" : $"Selected RotateY: {t.RotY} - Y/y",
+                        fancyModeEnabled ? $"[SELECTED ROT_Z]      {t.RotZ:F0}°" : $"Selected RotateZ: {t.RotZ} - Z/z",
+                        "",
+                        fancyModeEnabled ? $"[SELECTED CAM_R]      {r:F1}"     : $"r: {r} - R/r",
+                        fancyModeEnabled ? $"[SELECTED CAM_D]      {d:F0}"     : $"d: {d} - D/d",
+                        fancyModeEnabled ? $"[SELECTED PHI]        {phi:F1}"   : $"phi: {phi} - P/p",
+                        fancyModeEnabled ? $"[SELECTED THETA]      {theta:F1}" : $"theta: {theta} - T/t",
+                        "",
+                        fancyModeEnabled ? $"[ANIMATION]  {animationIsPlaying} [A]" : $"Animation: {animationIsPlaying} - A"
+                    };
+
+                    if (phase != 0)
+                        labels.Add(fancyModeEnabled ? $">> CORE_PHASE_{phase}.{phasePart}" : $"Phase: {phase} (part: {phasePart})");
+
+                    labels.Add("");
+
+                    for (int i = 0; i < labels.Count; i++)
+                        g.DrawString(labels[i], font, brush, x, y + ((i + 2) * lineHeight));
+
+                    float finalY = y + ((labels.Count + 2) * lineHeight);
+
+                    if (!fancyModeEnabled)
+                    {
+                        using (Brush alertBrush = new SolidBrush(Color.Red))
+                            g.DrawString("TAKE THE RED PILL: PRESS [F]", font, alertBrush, x, finalY);
+                    }
+                    else
+                    {
+                        g.DrawString("> MATRIX: ONLINE [F]", font, brush, x, finalY);
+                    }
+                }
+            }
+        }
         private void ResetTransforms()
         {
-            posX = 0f;
-            posY = 0f;
-            posZ = 0f;
-            rotX = 0f;
-            rotY = 0f;
-            rotZ = 0f;
-            scale = 1f;
+           foreach(RenderObject renderObject in renderObjects) renderObject.transformState.Reset();
+
             animationIsPlaying = false;
+
             phase = 0;
 
             r = 10f;
@@ -401,146 +393,80 @@ namespace MatrixTransformations
             canvasGraphics.Clear(Color.Black);
         }
 
+        private List<Vector> GenerateStars()
+        {
+            List<Vector> stars = new List<Vector>();
+
+            for (int i = 0; i < starsAmount; i++)
+            {
+                float x = (float)(rng.NextDouble() * 20 - 10);
+                float y = (float)(rng.NextDouble() * 20 - 10);
+                float z = (float)(rng.NextDouble() * 20 - 10);
+                stars.Add(new Vector(x, y, z));
+            }
+
+            return stars;
+        }
+
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
-                Application.Exit();
+            var t = selectedObject.transformState;
 
-            if (e.KeyCode == Keys.Left)
+            switch (e.KeyCode)
             {
-                posX -= TRANSLATE_STEP;
-            }
-            else if (e.KeyCode == Keys.Right)
-            {
-                posX += TRANSLATE_STEP;
-            }
+                case Keys.Escape:
+                    Application.Exit();
+                    break;
 
-            if (e.KeyCode == Keys.Down)
-            {
-                posY -= TRANSLATE_STEP;
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                posY += TRANSLATE_STEP;
-            }
+                // Translation
+                case Keys.Left:     t.PosX -= TRANSLATE_STEP; break;
+                case Keys.Right:    t.PosX += TRANSLATE_STEP; break;
+                case Keys.Down:     t.PosY -= TRANSLATE_STEP; break;
+                case Keys.Up:       t.PosY += TRANSLATE_STEP; break;
+                case Keys.PageDown: t.PosZ -= TRANSLATE_STEP; break;
+                case Keys.PageUp:   t.PosZ += TRANSLATE_STEP; break;
 
-            if (e.KeyCode == Keys.PageDown)
-            {
-                posZ -= TRANSLATE_STEP;
-            }
-            else if (e.KeyCode == Keys.PageUp)
-            {
-                posZ += TRANSLATE_STEP;
-            }
+                // Rotation & Scaling
+                case Keys.X: t.RotX += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
+                case Keys.Y: t.RotY += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
+                case Keys.Z: t.RotZ += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
+                case Keys.S: t.Scale += e.Shift ? SCALE_STEP : -SCALE_STEP;  break;
 
-            if (e.KeyCode == Keys.X && !e.Shift)
-            {
-                rotX -= ROTATE_STEP;
-            }
-            else if (e.KeyCode == Keys.X && e.Shift)
-            {
-                rotX += ROTATE_STEP;
-            }
+                // Camera Controls
+                case Keys.R: r += e.Shift ? CAMERA_R_STEP   : -CAMERA_R_STEP;    break;
+                case Keys.D: d += e.Shift ? CAMERA_D_STEP   : -CAMERA_D_STEP;    break;
+                case Keys.P: phi += e.Shift ? CAMERA_ANGLE_STEP : -CAMERA_ANGLE_STEP; break;
+                case Keys.T: theta += e.Shift ? CAMERA_ANGLE_STEP : -CAMERA_ANGLE_STEP; break;
 
-            if (e.KeyCode == Keys.Y && !e.Shift)
-            {
-                rotY -= ROTATE_STEP;
-            }
-            else if (e.KeyCode == Keys.Y && e.Shift)
-            {
-                rotY += ROTATE_STEP;
-            }
-
-            if (e.KeyCode == Keys.Z && !e.Shift)
-            {
-                rotZ -= ROTATE_STEP;
-            }
-            else if (e.KeyCode == Keys.Z && e.Shift)
-            {
-                rotZ += ROTATE_STEP;
-            }
-
-            if (e.KeyCode == Keys.S && !e.Shift)
-            {
-                scale -= SCALE_STEP;
-            }
-            else if (e.KeyCode == Keys.S && e.Shift)
-            {
-                scale += SCALE_STEP;
-            }
-
-            if (e.KeyCode == Keys.R && !e.Shift)
-            {
-                r -= CAMERA_R_STEP;
-            }
-            else if (e.KeyCode == Keys.R && e.Shift)
-            {
-                r += CAMERA_R_STEP;
-            }
-
-            if (e.KeyCode == Keys.D && !e.Shift)
-            {
-                d -= CAMERA_D_STEP;
-            }
-            else if (e.KeyCode == Keys.D && e.Shift)
-            {
-                d += CAMERA_D_STEP;
-            }
-
-            if (e.KeyCode == Keys.P && !e.Shift)
-            {
-                phi -= CAMERA_ANGLE_STEP;
-            }
-            else if (e.KeyCode == Keys.P && e.Shift)
-            {
-                phi += CAMERA_ANGLE_STEP;
-            }
-
-            if (e.KeyCode == Keys.T && !e.Shift)
-            {
-                theta -= CAMERA_ANGLE_STEP;
-            }
-            else if (e.KeyCode == Keys.T && e.Shift)
-            {
-                theta += CAMERA_ANGLE_STEP;
-            }
-
-            if (e.KeyCode == Keys.C)
-            {
-                ResetTransforms();
-                SetMatrixMode(false);
-            }
-
-            if (e.KeyCode == Keys.A)
-            {
-                animationIsPlaying = !animationIsPlaying;
-
-                if (phase == 0)
-                {
-                    animationTimer.Start();
-                    phase = 1;
-                    phasePart = 1;
-                }
-                else
-                {
-                    animationTimer.Stop();
-                    phase = 0;
-                    phasePart = 0;
-
+                // Reset & Theme controls
+                case Keys.C:
                     ResetTransforms();
-                }
-            }
+                    SetFancyMode(false);
+                    hideDebug = false;
+                    break;
+                case Keys.F: SetFancyMode(!fancyModeEnabled); break;
+                case Keys.M:
+                    hideDebug = !hideDebug;
+                    canvasGraphics.Clear(Color.Black);
+                    break;
 
-            // Toggle matrix visual mode (green theme + dark title bar)
-            if (e.KeyCode == Keys.F)
-            {
-                SetMatrixMode(!enteredMatrix);
-            }
-
-            if (e.KeyCode == Keys.M)
-            {
-                hideDebug = !hideDebug;
-                canvasGraphics.Clear(Color.Black);
+                // Animation
+                case Keys.A:
+                    animationIsPlaying = !animationIsPlaying;
+                    if (phase == 0)
+                    {
+                        animationTimer.Start();
+                        phase = 1;
+                        phasePart = 1;
+                    }
+                    else
+                    {
+                        animationTimer.Stop();
+                        phase = 0;
+                        phasePart = 0;
+                        ResetTransforms();
+                    }
+                    break;
             }
 
             Invalidate();

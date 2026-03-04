@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj": {}
+    "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj": {}
   },
   "projects": {
-    "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj": {
+    "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
+        "projectUniqueName": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
         "projectName": "MatrixTransformations",
-        "projectPath": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
-        "packagesPath": "C:\\Users\\Desley\\.nuget\\packages\\",
-        "outputPath": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\obj\\",
+        "projectPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\MatrixTransformations.csproj",
+        "packagesPath": "C:\\Users\\nrlup\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Desley\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\nrlup\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

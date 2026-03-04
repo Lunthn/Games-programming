@@ -3,6 +3,7 @@
     public class Matrix
     {
         float[,] mat = new float[4, 4];
+        public float[,] GetMat() => mat;
 
         public Matrix() : this(0, 0, 0, 0)
         {
@@ -128,12 +129,26 @@
 
         public static Matrix Identity()
         {
-            return new Matrix(1, 0, 0, 0, 1, 0, 0, 0, 1);
+            Matrix result = new Matrix();
+
+            for(int i = 0; i < result.mat.GetLength(0); i++)
+            {
+                result.mat[i,i] = 1;
+            }
+
+            return result;
         }
 
         public static Matrix ScaleMatrix(float s)
         {
-            return new Matrix(s, 0, 0, 0, s, 0, 0, 0, s);
+            Matrix result = Matrix.Identity();
+
+            for(int i = 0; i < result.mat.GetLength(0) - 1; i++)
+            {
+                result.mat[i,i] = s;
+            }
+
+            return result;
         }
 
         public static Matrix RotateMatrixX(float degrees)
