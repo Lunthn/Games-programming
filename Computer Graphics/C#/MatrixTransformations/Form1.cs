@@ -136,11 +136,100 @@ namespace MatrixTransformations
             DrawInfo(e.Graphics);
         }
 
+        private List<Vector> GenerateStars()
+        {
+            List<Vector> stars = new List<Vector>();
+
+            for (int i = 0; i < starsAmount; i++)
+            {
+                float x = (float)(rng.NextDouble() * 20 - 10);
+                float y = (float)(rng.NextDouble() * 20 - 10);
+                float z = (float)(rng.NextDouble() * 20 - 10);
+                stars.Add(new Vector(x, y, z));
+            }
+
+            return stars;
+        }
+
+        // Draws random ASCII characters at projected star positions for the matrix rain effect
+        private void DrawStars(Graphics g)
+        {
+            using (Font matrixFont = new Font("Consolas", 8, FontStyle.Bold))
+            {
+                var projectedStars = ViewingPipeline(stars);
+                foreach (var star in projectedStars)
+                {
+                    char randomChar = (char)rng.Next(ASCII_MIN, ASCII_MAX);
+                    g.DrawString(randomChar.ToString(), matrixFont, Brushes.Green, star.x, star.y);
+                }
+            }
+        }
+
         private void DrawAxes(Graphics g)
         {
             x_axis.Draw(g, ViewingPipeline(x_axis.vertexbuffer));
             y_axis.Draw(g, ViewingPipeline(y_axis.vertexbuffer));
             z_axis.Draw(g, ViewingPipeline(z_axis.vertexbuffer));
+        }
+
+        // Applies scale, rotation, and translation transforms to the cube's vertices
+        public List<Vector> TransformModel(List<Vector> vertexbuffer)
+        {
+            var result = new List<Vector>();
+
+            var scaleMatrix = Matrix.ScaleMatrix(selectedObject.transformState.Scale);
+            var rotateMatrixX = Matrix.RotateMatrixX(selectedObject.transformState.RotX);
+            var rotateMatrixY = Matrix.RotateMatrixY(selectedObject.transformState.RotY);
+            var rotateMatrixZ = Matrix.RotateMatrixZ(selectedObject.transformState.RotZ);
+            var translateMatrix = Matrix.TranslateMatrix(new Vector(selectedObject.transformState.PosX, selectedObject.transformState.PosY, selectedObject.transformState.PosZ));
+
+            // Combine transforms: T * Rz * Ry * Rx * S
+            var totalMatrix = translateMatrix * rotateMatrixZ * rotateMatrixY * rotateMatrixX * scaleMatrix;
+
+            foreach (Vector v in vertexbuffer)
+            {
+                Vector v2 = totalMatrix * v;
+                result.Add(v2);
+            }
+
+            return result;
+        }
+
+        // Applies view transform, perspective projection, and viewport mapping
+        public List<Vector> ViewingPipeline(List<Vector> vertexbuffer)
+        {
+            var viewMatrix = Matrix.ViewMatrix(r, theta, phi);
+            var result = new List<Vector>();
+
+            foreach (Vector v in vertexbuffer)
+            {
+                Vector v2 = viewMatrix * v;
+
+                var projectMatrix = Matrix.ProjectMatrix(d, v2.z);
+                Vector v3 = projectMatrix * v2;
+
+                result.Add(v3);
+            }
+
+            return ViewportTransformation(result);
+        }
+
+        // Converts normalized 2D coordinates to screen space
+        public static List<Vector> ViewportTransformation(List<Vector> vb)
+        {
+            float delta_x = WIDTH / 2;
+            float delta_y = HEIGHT / 2;
+
+            List<Vector> result = new List<Vector>();
+
+            foreach (Vector v in vb)
+            {
+                float newX = v.x + delta_x;
+                float newY = delta_y - v.y; // Flip Y so positive is up
+                result.Add(new Vector(newX, newY));
+            }
+
+            return result;
         }
 
         // Centralizes all visual theme changes for matrix mode
@@ -177,16 +266,63 @@ namespace MatrixTransformations
             }
         }
 
-        // Draws random ASCII characters at projected star positions for the matrix rain effect
-        private void DrawStars(Graphics g)
+        private void DrawInfo(Graphics g)
         {
-            using (Font matrixFont = new Font("Consolas", 8, FontStyle.Bold))
+            var t = selectedObject.transformState;
+
+            using (Font font = new Font(fancyModeEnabled ? "Consolas" : "Arial", 10, FontStyle.Bold))
+            using (Brush brush = new SolidBrush(currentTextColor))
             {
-                var projectedStars = ViewingPipeline(stars);
-                foreach (var star in projectedStars)
+                float x = 20;
+                float y = 20;
+                float lineHeight = font.GetHeight(g) + 2;
+
+                string debugInfo = fancyModeEnabled ? $"> SYSTEM_DEBUG: {!hideDebug} [M]" : $"Hide debug/controls: {hideDebug} - M";
+                string resetInfo = fancyModeEnabled ? "> INITIALIZE_RESET [C]" : "Reset everything - C";
+
+                g.DrawString(debugInfo, font, brush, x, y);
+                g.DrawString(resetInfo, font, brush, x, y + lineHeight);
+
+                if (!hideDebug)
                 {
-                    char randomChar = (char)rng.Next(ASCII_MIN, ASCII_MAX);
-                    g.DrawString(randomChar.ToString(), matrixFont, Brushes.Green, star.x, star.y);
+                    List<string> labels = new List<string> {
+                        "",
+                        fancyModeEnabled ? $"[SELECTED SCALE]      {t.Scale:F2}" : $"Selected Scale: {t.Scale} - S/s",
+                        fancyModeEnabled ? $"[SELECTED TRANS_X]    {t.PosX:F1}"  : $"Selected TranslateX: {t.PosX} - Left/right",
+                        fancyModeEnabled ? $"[SELECTED TRANS_Y]    {t.PosY:F1}"  : $"Selected TranslateY: {t.PosY} - Up/down",
+                        fancyModeEnabled ? $"[SELECTED TRANS_Z]    {t.PosZ:F1}"  : $"Selected TranslateZ: {t.PosZ} - PgDn/PgUp",
+                        "",
+                        fancyModeEnabled ? $"[SELECTED ROT_X]      {t.RotX:F0}°" : $"Selected RotateX: {t.RotX} - X/x",
+                        fancyModeEnabled ? $"[SELECTED ROT_Y]      {t.RotY:F0}°" : $"Selected RotateY: {t.RotY} - Y/y",
+                        fancyModeEnabled ? $"[SELECTED ROT_Z]      {t.RotZ:F0}°" : $"Selected RotateZ: {t.RotZ} - Z/z",
+                        "",
+                        fancyModeEnabled ? $"[SELECTED CAM_R]      {r:F1}"     : $"r: {r} - R/r",
+                        fancyModeEnabled ? $"[SELECTED CAM_D]      {d:F0}"     : $"d: {d} - D/d",
+                        fancyModeEnabled ? $"[SELECTED PHI]        {phi:F1}"   : $"phi: {phi} - P/p",
+                        fancyModeEnabled ? $"[SELECTED THETA]      {theta:F1}" : $"theta: {theta} - T/t",
+                        "",
+                        fancyModeEnabled ? $"[ANIMATION]  {animationIsPlaying} [A]" : $"Animation: {animationIsPlaying} - A"
+                    };
+
+                    if (phase != 0)
+                        labels.Add(fancyModeEnabled ? $">> CORE_PHASE_{phase}.{phasePart}" : $"Phase: {phase} (part: {phasePart})");
+
+                    labels.Add("");
+
+                    for (int i = 0; i < labels.Count; i++)
+                        g.DrawString(labels[i], font, brush, x, y + ((i + 2) * lineHeight));
+
+                    float finalY = y + ((labels.Count + 2) * lineHeight);
+
+                    if (!fancyModeEnabled)
+                    {
+                        using (Brush alertBrush = new SolidBrush(Color.Red))
+                            g.DrawString("TAKE THE RED PILL: PRESS [F]", font, alertBrush, x, finalY);
+                    }
+                    else
+                    {
+                        g.DrawString("> MATRIX: ONLINE [F]", font, brush, x, finalY);
+                    }
                 }
             }
         }
@@ -259,158 +395,6 @@ namespace MatrixTransformations
             }
         }
 
-        // Applies scale, rotation, and translation transforms to the cube's vertices
-        public List<Vector> TransformModel(List<Vector> vertexbuffer)
-        {
-            var result = new List<Vector>();
-
-            var scaleMatrix = Matrix.ScaleMatrix(selectedObject.transformState.Scale);
-            var rotateMatrixX = Matrix.RotateMatrixX(selectedObject.transformState.RotX);
-            var rotateMatrixY = Matrix.RotateMatrixY(selectedObject.transformState.RotY);
-            var rotateMatrixZ = Matrix.RotateMatrixZ(selectedObject.transformState.RotZ);
-            var translateMatrix = Matrix.TranslateMatrix(new Vector(selectedObject.transformState.PosX, selectedObject.transformState.PosY, selectedObject.transformState.PosZ));
-
-            // Combine transforms: T * Rz * Ry * Rx * S
-            var totalMatrix = translateMatrix * rotateMatrixZ * rotateMatrixY * rotateMatrixX * scaleMatrix;
-
-            foreach (Vector v in vertexbuffer)
-            {
-                Vector v2 = totalMatrix * v;
-                result.Add(v2);
-            }
-
-            return result;
-        }
-
-        // Applies view transform, perspective projection, and viewport mapping
-        public List<Vector> ViewingPipeline(List<Vector> vertexbuffer)
-        {
-            var viewMatrix = Matrix.ViewMatrix(r, theta, phi);
-            var result = new List<Vector>();
-
-            foreach (Vector v in vertexbuffer)
-            {
-                Vector v2 = viewMatrix * v;
-
-                var projectMatrix = Matrix.ProjectMatrix(d, v2.z);
-                Vector v3 = projectMatrix * v2;
-
-                result.Add(v3);
-            }
-
-            return ViewportTransformation(result);
-        }
-
-        // Converts normalized 2D coordinates to screen space
-        public static List<Vector> ViewportTransformation(List<Vector> vb)
-        {
-            float delta_x = WIDTH / 2;
-            float delta_y = HEIGHT / 2;
-
-            List<Vector> result = new List<Vector>();
-
-            foreach (Vector v in vb)
-            {
-                float newX = v.x + delta_x;
-                float newY = delta_y - v.y; // Flip Y so positive is up
-                result.Add(new Vector(newX, newY));
-            }
-
-            return result;
-        }
-
-        private void DrawInfo(Graphics g)
-        {
-            var t = selectedObject.transformState;
-
-            using (Font font = new Font(fancyModeEnabled ? "Consolas" : "Arial", 10, FontStyle.Bold))
-            using (Brush brush = new SolidBrush(currentTextColor))
-            {
-                float x = 20;
-                float y = 20;
-                float lineHeight = font.GetHeight(g) + 2;
-
-                string debugInfo = fancyModeEnabled ? $"> SYSTEM_DEBUG: {!hideDebug} [M]" : $"Hide debug/controls: {hideDebug} - M";
-                string resetInfo = fancyModeEnabled ? "> INITIALIZE_RESET [C]" : "Reset everything - C";
-
-                g.DrawString(debugInfo, font, brush, x, y);
-                g.DrawString(resetInfo, font, brush, x, y + lineHeight);
-
-                if (!hideDebug)
-                {
-                    List<string> labels = new List<string> {
-                        "",
-                        fancyModeEnabled ? $"[SELECTED SCALE]      {t.Scale:F2}" : $"Selected Scale: {t.Scale} - S/s",
-                        fancyModeEnabled ? $"[SELECTED TRANS_X]    {t.PosX:F1}"  : $"Selected TranslateX: {t.PosX} - Left/right",
-                        fancyModeEnabled ? $"[SELECTED TRANS_Y]    {t.PosY:F1}"  : $"Selected TranslateY: {t.PosY} - Up/down",
-                        fancyModeEnabled ? $"[SELECTED TRANS_Z]    {t.PosZ:F1}"  : $"Selected TranslateZ: {t.PosZ} - PgDn/PgUp",
-                        "",
-                        fancyModeEnabled ? $"[SELECTED ROT_X]      {t.RotX:F0}°" : $"Selected RotateX: {t.RotX} - X/x",
-                        fancyModeEnabled ? $"[SELECTED ROT_Y]      {t.RotY:F0}°" : $"Selected RotateY: {t.RotY} - Y/y",
-                        fancyModeEnabled ? $"[SELECTED ROT_Z]      {t.RotZ:F0}°" : $"Selected RotateZ: {t.RotZ} - Z/z",
-                        "",
-                        fancyModeEnabled ? $"[SELECTED CAM_R]      {r:F1}"     : $"r: {r} - R/r",
-                        fancyModeEnabled ? $"[SELECTED CAM_D]      {d:F0}"     : $"d: {d} - D/d",
-                        fancyModeEnabled ? $"[SELECTED PHI]        {phi:F1}"   : $"phi: {phi} - P/p",
-                        fancyModeEnabled ? $"[SELECTED THETA]      {theta:F1}" : $"theta: {theta} - T/t",
-                        "",
-                        fancyModeEnabled ? $"[ANIMATION]  {animationIsPlaying} [A]" : $"Animation: {animationIsPlaying} - A"
-                    };
-
-                    if (phase != 0)
-                        labels.Add(fancyModeEnabled ? $">> CORE_PHASE_{phase}.{phasePart}" : $"Phase: {phase} (part: {phasePart})");
-
-                    labels.Add("");
-
-                    for (int i = 0; i < labels.Count; i++)
-                        g.DrawString(labels[i], font, brush, x, y + ((i + 2) * lineHeight));
-
-                    float finalY = y + ((labels.Count + 2) * lineHeight);
-
-                    if (!fancyModeEnabled)
-                    {
-                        using (Brush alertBrush = new SolidBrush(Color.Red))
-                            g.DrawString("TAKE THE RED PILL: PRESS [F]", font, alertBrush, x, finalY);
-                    }
-                    else
-                    {
-                        g.DrawString("> MATRIX: ONLINE [F]", font, brush, x, finalY);
-                    }
-                }
-            }
-        }
-
-        private void ResetTransforms()
-        {
-            foreach (RenderObject renderObject in renderObjects) renderObject.transformState.Reset();
-
-            animationIsPlaying = false;
-
-            phase = 0;
-
-            r = 10f;
-            d = 800f;
-            phi = -10f;
-            theta = -100f;
-
-            canvasGraphics.Clear(Color.Black);
-        }
-
-        private List<Vector> GenerateStars()
-        {
-            List<Vector> stars = new List<Vector>();
-
-            for (int i = 0; i < starsAmount; i++)
-            {
-                float x = (float)(rng.NextDouble() * 20 - 10);
-                float y = (float)(rng.NextDouble() * 20 - 10);
-                float z = (float)(rng.NextDouble() * 20 - 10);
-                stars.Add(new Vector(x, y, z));
-            }
-
-            return stars;
-        }
-
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             var t = selectedObject.transformState;
@@ -474,6 +458,22 @@ namespace MatrixTransformations
             }
 
             Invalidate();
+        }
+
+        private void ResetTransforms()
+        {
+            foreach (RenderObject renderObject in renderObjects) renderObject.transformState.Reset();
+
+            animationIsPlaying = false;
+
+            phase = 0;
+
+            r = 10f;
+            d = 800f;
+            phi = -10f;
+            theta = -100f;
+
+            canvasGraphics.Clear(Color.Black);
         }
     }
 }
