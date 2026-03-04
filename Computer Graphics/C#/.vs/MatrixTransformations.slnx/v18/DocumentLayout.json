@@ -1,42 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\",
+  "WorkspaceRootPath": "D:\\Games-programming\\Computer Graphics\\C#\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\cube.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\axis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\axis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\imodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\imodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtests\\matrixtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|d:\\games-programming\\computer graphics\\c#\\matrixtests\\matrixtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|solutionrelative:matrixtests\\matrixtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|c:\\users\\nrlup\\desktop\\games-programming\\computer graphics\\c#\\matrixtests\\vectortests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|d:\\games-programming\\computer graphics\\c#\\matrixtests\\vectortests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3C99362E-C1AE-49F4-B785-89EA5ABE9586}|MatrixTests\\MatrixTests.csproj|solutionrelative:matrixtests\\vectortests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|d:\\games-programming\\computer graphics\\c#\\matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BE25F8D-CEC4-AD41-EBFC-5E4CA51D426A}|MatrixTransformations\\MatrixTransformations.csproj|solutionrelative:matrixtransformations\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 30,
+          "SelectedChildIndex": 24,
           "Children": [
             {
               "$type": "Bookmark",
@@ -142,118 +118,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Form1.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs [Design]",
-              "RelativeToolTip": "MatrixTransformations\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T11:55:23.758Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Axis.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Axis.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Axis.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Axis.cs",
-              "RelativeToolTip": "MatrixTransformations\\Axis.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T11:51:20.635Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "Matrix.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
+              "DocumentMoniker": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
               "RelativeDocumentMoniker": "MatrixTransformations\\Matrix.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
+              "ToolTip": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Matrix.cs",
               "RelativeToolTip": "MatrixTransformations\\Matrix.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAIwCAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-04T11:47:54.722Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IModel.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\IModel.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\IModel.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\IModel.cs*",
-              "RelativeToolTip": "MatrixTransformations\\IModel.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T11:47:31.248Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "VectorTests.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\VectorTests.cs",
-              "RelativeDocumentMoniker": "MatrixTests\\VectorTests.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\VectorTests.cs",
-              "RelativeToolTip": "MatrixTests\\VectorTests.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwAwAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T10:11:29.797Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "MatrixTests.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\MatrixTests.cs",
+              "DocumentMoniker": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\MatrixTests.cs",
               "RelativeDocumentMoniker": "MatrixTests\\MatrixTests.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\MatrixTests.cs",
+              "ToolTip": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\MatrixTests.cs",
               "RelativeToolTip": "MatrixTests\\MatrixTests.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAACAAAAAAAAAAAAApwDoAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-04T10:10:36.125Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Program.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Program.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Program.cs",
-              "RelativeToolTip": "MatrixTransformations\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "VectorTests.cs",
+              "DocumentMoniker": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\VectorTests.cs",
+              "RelativeDocumentMoniker": "MatrixTests\\VectorTests.cs",
+              "ToolTip": "D:\\Games-programming\\Computer Graphics\\C#\\MatrixTests\\VectorTests.cs",
+              "RelativeToolTip": "MatrixTests\\VectorTests.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAIwAwAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T13:50:17.836Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Cube.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Cube.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Cube.cs",
-              "RelativeToolTip": "MatrixTransformations\\Cube.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T11:41:10.691Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
-              "RelativeDocumentMoniker": "MatrixTransformations\\Form1.cs",
-              "ToolTip": "C:\\Users\\nrlup\\Desktop\\Games-programming\\Computer Graphics\\C#\\MatrixTransformations\\Form1.cs",
-              "RelativeToolTip": "MatrixTransformations\\Form1.cs",
-              "ViewState": "AgIAAHwAAAAAAAAAAAAWwKgAAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T10:08:34.723Z",
+              "WhenOpened": "2026-03-04T10:11:29.797Z",
               "EditorCaption": ""
             }
           ]

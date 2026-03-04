@@ -1,12 +1,12 @@
 ﻿using Xunit;
-using MatrixTransformations;
 using System;
+using MatrixTransformations;
 
 namespace MatrixTransformations.Tests
 {
     public class MatrixTests
     {
-        private const int Precision = 0.0001f;
+        private const float Precision = 0.0001f;
 
         [Fact]
         public void DefaultConstructor_ShouldInitializeToZero()
@@ -14,9 +14,20 @@ namespace MatrixTransformations.Tests
             var matrix = new Matrix();
             var mat = matrix.GetMat();
 
-            foreach (var val in mat)
+            for (int i = 0; i < mat.GetLength(0); i++)
             {
-                Assert.Equal(0, val);
+                for (int j = 0; j < mat.GetLength(1); j++)
+                {
+                    if ((i == mat.GetLength(0) - 1 && j == mat.GetLength(1) - 1) ||
+                        (i == mat.GetLength(0) - 2 && j == mat.GetLength(1) - 2))
+                    {
+                        Assert.Equal(1, mat[i, j]);
+                    }
+                    else
+                    {
+                        Assert.Equal(0, mat[i, j]);
+                    }
+                }
             }
         }
 
@@ -31,7 +42,7 @@ namespace MatrixTransformations.Tests
             Assert.Equal(2, mat[0, 0]);
             Assert.Equal(2, mat[1, 1]);
             Assert.Equal(2, mat[2, 2]);
-            Assert.Equal(2, mat[3, 3]);
+            Assert.Equal(1, mat[3, 3]);
         }
 
         [Fact]
@@ -45,7 +56,7 @@ namespace MatrixTransformations.Tests
             Assert.Equal(0, mat[0, 0]);
             Assert.Equal(0, mat[1, 1]);
             Assert.Equal(0, mat[2, 2]);
-            Assert.Equal(0, mat[3, 3]);
+            Assert.Equal(1, mat[3, 3]);
         }
 
         [Fact]
@@ -72,10 +83,10 @@ namespace MatrixTransformations.Tests
             var result = m1 * m2;
             var mat = result.GetMat();
 
-            Assert.Equal(4, mat[0, 0]);
-            Assert.Equal(6, mat[0, 1]);
-            Assert.Equal(6, mat[1, 0]);
-            Assert.Equal(4, mat[1, 1]);
+            Assert.Equal(8, mat[0, 0]);
+            Assert.Equal(5, mat[0, 1]);
+            Assert.Equal(20, mat[1, 0]);
+            Assert.Equal(13, mat[1, 1]);
         }
 
         [Fact]
@@ -202,8 +213,8 @@ namespace MatrixTransformations.Tests
             var projection = Matrix.ProjectMatrix(d, vz);
             var mat = projection.GetMat();
 
-            Assert.Equal(expectedScale, data[0, 0], Precision);
-            Assert.Equal(expectedScale, data[1, 1], Precision);
+            Assert.Equal(expectedScale, mat[0, 0], Precision);
+            Assert.Equal(expectedScale, mat[1, 1], Precision);
             
             Assert.Equal(1, mat[2, 2]);
             Assert.Equal(1, mat[3, 3]);
