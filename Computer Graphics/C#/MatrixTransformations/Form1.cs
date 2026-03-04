@@ -57,7 +57,7 @@ namespace MatrixTransformations
 
         private Random rng = new Random();
 
-        // Windows API for dark title bar support
+        // Windows API for dark title bar support, only supported on Windows 11
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
