@@ -32,9 +32,11 @@ namespace MatrixTransformations
         private Axis z_axis = new Axis(0, 0, 3, "z", Color.Blue);
 
         // Objects
-        public List<RenderObject> renderObjects = new List<RenderObjects>();
+        public List<RenderObject> renderObjects = new List<RenderObject>();
+
+        // Transforms are only done on the selected object
         public RenderObject selectedObject;
-    
+
         private float d = 800;
         private float r = 10;
         private float theta = -100;
@@ -77,7 +79,7 @@ namespace MatrixTransformations
             this.DoubleBuffered = true;
             this.Text = "Matrix Transformations";
 
-            RenderObject cube = new (new Cube(Color.Purple, Color.Black), new TransformState());
+            RenderObject cube = new(new Cube(Color.Purple, Color.Black), new TransformState());
 
             selectedObject = cube;
             renderObjects.Add(cube);
@@ -92,7 +94,7 @@ namespace MatrixTransformations
             {
                 if (animationIsPlaying)
                 {
-                    foreach(RenderObject renderObject in renderObjects) Animate(renderObject.transformState);
+                    foreach (RenderObject renderObject in renderObjects) Animate(renderObject.transformState);
                     Invalidate();
                 }
             };
@@ -123,7 +125,7 @@ namespace MatrixTransformations
                 DrawAxes(g);
             }
 
-            foreach(RenderObject renderObject in renderObjects) renderObject.model.Draw(g, ViewingPipeline(TransformModel(renderObject.model.vertexbuffer)), hideDebug);
+            foreach (RenderObject renderObject in renderObjects) renderObject.model.Draw(g, ViewingPipeline(TransformModel(renderObject.model.VertexBuffer)), hideDebug);
 
             if (fancyModeEnabled)
             {
@@ -151,10 +153,10 @@ namespace MatrixTransformations
             {
                 currentTextColor = Color.Green;
 
-                foreach(RenderObject renderObject in renderObjects)
+                foreach (RenderObject renderObject in renderObjects)
                 {
-                    renderObject.model.color = Color.Green;
-                    renderObject.model.labelColor = currentTextColor;
+                    renderObject.model.Color = Color.Green;
+                    renderObject.model.LabelColor = currentTextColor;
                 }
 
                 this.Text = "=== MATRIX_MAIN_FRAME ===";
@@ -164,10 +166,10 @@ namespace MatrixTransformations
             {
                 currentTextColor = Color.Black;
 
-                foreach(RenderObject renderObject in renderObjects)
+                foreach (RenderObject renderObject in renderObjects)
                 {
-                    renderObject.model.color = Color.Purple;
-                    renderObject.model.labelColor = currentTextColor;
+                    renderObject.model.Color = Color.Purple;
+                    renderObject.model.LabelColor = currentTextColor;
                 }
 
                 this.Text = "Matrix Transformations";
@@ -299,7 +301,7 @@ namespace MatrixTransformations
             return ViewportTransformation(result);
         }
 
-         // Converts normalized 2D coordinates to screen space
+        // Converts normalized 2D coordinates to screen space
         public static List<Vector> ViewportTransformation(List<Vector> vb)
         {
             float delta_x = WIDTH / 2;
@@ -377,9 +379,10 @@ namespace MatrixTransformations
                 }
             }
         }
+
         private void ResetTransforms()
         {
-           foreach(RenderObject renderObject in renderObjects) renderObject.transformState.Reset();
+            foreach (RenderObject renderObject in renderObjects) renderObject.transformState.Reset();
 
             animationIsPlaying = false;
 
@@ -419,22 +422,22 @@ namespace MatrixTransformations
                     break;
 
                 // Translation
-                case Keys.Left:     t.PosX -= TRANSLATE_STEP; break;
-                case Keys.Right:    t.PosX += TRANSLATE_STEP; break;
-                case Keys.Down:     t.PosY -= TRANSLATE_STEP; break;
-                case Keys.Up:       t.PosY += TRANSLATE_STEP; break;
+                case Keys.Left: t.PosX -= TRANSLATE_STEP; break;
+                case Keys.Right: t.PosX += TRANSLATE_STEP; break;
+                case Keys.Down: t.PosY -= TRANSLATE_STEP; break;
+                case Keys.Up: t.PosY += TRANSLATE_STEP; break;
                 case Keys.PageDown: t.PosZ -= TRANSLATE_STEP; break;
-                case Keys.PageUp:   t.PosZ += TRANSLATE_STEP; break;
+                case Keys.PageUp: t.PosZ += TRANSLATE_STEP; break;
 
                 // Rotation & Scaling
                 case Keys.X: t.RotX += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
                 case Keys.Y: t.RotY += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
                 case Keys.Z: t.RotZ += e.Shift ? ROTATE_STEP : -ROTATE_STEP; break;
-                case Keys.S: t.Scale += e.Shift ? SCALE_STEP : -SCALE_STEP;  break;
+                case Keys.S: t.Scale += e.Shift ? SCALE_STEP : -SCALE_STEP; break;
 
                 // Camera Controls
-                case Keys.R: r += e.Shift ? CAMERA_R_STEP   : -CAMERA_R_STEP;    break;
-                case Keys.D: d += e.Shift ? CAMERA_D_STEP   : -CAMERA_D_STEP;    break;
+                case Keys.R: r += e.Shift ? CAMERA_R_STEP : -CAMERA_R_STEP; break;
+                case Keys.D: d += e.Shift ? CAMERA_D_STEP : -CAMERA_D_STEP; break;
                 case Keys.P: phi += e.Shift ? CAMERA_ANGLE_STEP : -CAMERA_ANGLE_STEP; break;
                 case Keys.T: theta += e.Shift ? CAMERA_ANGLE_STEP : -CAMERA_ANGLE_STEP; break;
 
@@ -444,6 +447,7 @@ namespace MatrixTransformations
                     SetFancyMode(false);
                     hideDebug = false;
                     break;
+
                 case Keys.F: SetFancyMode(!fancyModeEnabled); break;
                 case Keys.M:
                     hideDebug = !hideDebug;

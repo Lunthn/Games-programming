@@ -14,16 +14,16 @@ namespace MatrixTransformations
         //      |/         |/                  z
         //      2----------1
 
-        public List<Vector> vertexbuffer;
-        public Color color;
-        public Color labelColor;
+        public Color Color { get; set; }
+        public Color LabelColor { get; set; }
+        public List<Vector> VertexBuffer { get; }
 
         public Cube(Color color, Color labelColor)
         {
-            this.color = color;
-            this.labelColor = labelColor;
+            this.Color = color;
+            this.LabelColor = labelColor;
 
-            vertexbuffer = new List<Vector>
+            VertexBuffer = new List<Vector>
             {
                 new Vector( 1.0f,  1.0f, 1.0f),     //0
                 new Vector( 1.0f, -1.0f, 1.0f),     //1
@@ -49,8 +49,8 @@ namespace MatrixTransformations
 
         public void Draw(Graphics g, List<Vector> vb, bool hideDebug = false)
         {
-            using (Pen pen = new Pen(color, 3f))
-            using (Brush brush = new SolidBrush(labelColor))
+            using (Pen pen = new Pen(Color, 3f))
+            using (Brush brush = new SolidBrush(LabelColor))
             {
                 g.DrawLine(pen, vb[0].x, vb[0].y, vb[1].x, vb[1].y);    //0 -> 1
                 g.DrawLine(pen, vb[1].x, vb[1].y, vb[2].x, vb[2].y);    //1 -> 2
