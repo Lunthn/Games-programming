@@ -31,7 +31,7 @@ namespace MatrixTransformations
         private Axis y_axis = new Axis(0, 3, 0, "y", Color.Green);
         private Axis z_axis = new Axis(0, 0, 3, "z", Color.Blue);
 
-        // Objects
+        // Objects, possibly more in the future, stored in a list for easy iteration during rendering and animation
         public List<RenderObject> renderObjects = new List<RenderObject>();
 
         // Transforms are only done on the selected object
