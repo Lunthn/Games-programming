@@ -33,9 +33,9 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.dbPanel1 = new SteeringCS.Double_buffered_Panel();
             this.infoPanel = new System.Windows.Forms.Panel();
-            this.infoLabel = new System.Windows.Forms.Label();
-            this.entityCountTextBox = new System.Windows.Forms.TextBox();
             this.entityCountLabel = new System.Windows.Forms.Label();
+            this.entityCountTextBox = new System.Windows.Forms.TextBox();
+            this.infoLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.infoPanel.SuspendLayout();
             this.SuspendLayout();
@@ -64,22 +64,12 @@
             this.infoPanel.Size = new System.Drawing.Size(180, 195);
             this.infoPanel.TabIndex = 1;
             // 
-            // infoLabel
-            // 
-            this.infoLabel.AutoSize = true;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoLabel.Location = new System.Drawing.Point(5, 5);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(69, 13);
-            this.infoLabel.TabIndex = 0;
-            this.infoLabel.Text = "Entities: 3\nStatus: Playing\nDebug: Off";
-            // 
             // entityCountLabel
             // 
             this.entityCountLabel.AutoSize = true;
             this.entityCountLabel.Location = new System.Drawing.Point(5, 135);
             this.entityCountLabel.Name = "entityCountLabel";
-            this.entityCountLabel.Size = new System.Drawing.Size(100, 13);
+            this.entityCountLabel.Size = new System.Drawing.Size(97, 13);
             this.entityCountLabel.TabIndex = 1;
             this.entityCountLabel.Text = "Set Entities (Enter):";
             // 
@@ -91,7 +81,18 @@
             this.entityCountTextBox.TabIndex = 2;
             this.entityCountTextBox.TabStop = false;
             this.entityCountTextBox.Text = "3";
+            this.entityCountTextBox.TextChanged += new System.EventHandler(this.entityCountTextBox_TextChanged);
             this.entityCountTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.EntityCountTextBox_KeyPress);
+            // 
+            // infoLabel
+            // 
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoLabel.Location = new System.Drawing.Point(5, 5);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(77, 39);
+            this.infoLabel.TabIndex = 0;
+            this.infoLabel.Text = "Entities: 3\nStatus: Playing\nDebug: Off";
             // 
             // Form1
             // 

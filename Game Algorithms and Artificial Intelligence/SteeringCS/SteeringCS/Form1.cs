@@ -10,6 +10,10 @@ namespace SteeringCS
 
         public const int UpdateTimestepMs = 11;
         public const int RenderTimestepMs = 6;
+        private bool _showInfoPanel = true;
+
+        private int _defaultEntities = 5;
+        private int _defaultObjects = 20;
 
         public Form1()
         {
@@ -32,7 +36,8 @@ namespace SteeringCS
         private void Form1_Load(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;
-            _world.Populate(3, 20);
+            entityCountTextBox.Text = _defaultEntities.ToString();
+            _world.Populate(_defaultEntities, _defaultObjects);
             this.ActiveControl = null;
         }
 
@@ -53,11 +58,11 @@ namespace SteeringCS
                 }
                 else
                 {
-                    _world.ResetPositions(3);
-                    entityCountTextBox.Text = "3";
+                    _world.ResetPositions(_defaultEntities);
+                    entityCountTextBox.Text = $"{_defaultEntities}";
                 }
             }
-            else if (e.KeyCode == Keys.Space || e.KeyCode == Keys.P)
+            else if (e.KeyCode == Keys.P)
             {
                 _world.IsPlaying = !_world.IsPlaying;
                 e.Handled = true;
@@ -65,6 +70,13 @@ namespace SteeringCS
             else if (e.KeyCode == Keys.D)
             {
                 _world.ShowDebugInfo = !_world.ShowDebugInfo;
+            }
+            else if (e.KeyCode == Keys.M)
+            {
+                if (_showInfoPanel) this.infoPanel.Hide();
+                else this.infoPanel.Show();
+
+                _showInfoPanel = !_showInfoPanel;
             }
         }
 
@@ -108,9 +120,10 @@ namespace SteeringCS
                            $"Debug: {(_world.ShowDebugInfo ? "On" : "Off")}\n" +
                            $"\nControls\n" +
                            $"R - Restart\n" +
-                           $"Space/P - Pause\n" +
+                           $"P - Pause\n" +
                            $"D - Debug Info\n" +
-                           $"Click - Set Target";
+                           $"M - Hide (this) label\n" +
+                           $"Click - Set Target \n";
         }
 
         private void DbPanel1_Paint(object sender, PaintEventArgs e)
@@ -125,6 +138,10 @@ namespace SteeringCS
                 _world.SetTarget(e.X, e.Y);
             }
             this.ActiveControl = null;
+        }
+
+        private void entityCountTextBox_TextChanged(object sender, EventArgs e)
+        {
         }
     }
 }
