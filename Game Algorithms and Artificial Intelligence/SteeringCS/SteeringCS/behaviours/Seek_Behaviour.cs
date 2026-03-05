@@ -5,11 +5,11 @@ using SteeringCS.util;
 
 namespace SteeringCS.behaviour
 {
-    internal class Arrive_Behaviour : Steering_Behaviour
+    internal class Seek_Behaviour : Steering_Behaviour
     {
         public Vector_2D Target { get; set; }
 
-        public Arrive_Behaviour(Entity me) : base(me)
+        public Seek_Behaviour(Entity me) : base(me)
         {
         }
 
@@ -20,7 +20,11 @@ namespace SteeringCS.behaviour
             Vector_2D delta = Vector_2D.Subtract(Target, Owner.Position);
             double distance = delta.Length();
 
-            if (distance <= 0) return new Vector_2D(0, 0);
+            if (distance <= 0)
+            {
+                // maybe set target to null here, so that the vehicle will stop seeking once it reaches/killed the target
+                return new Vector_2D(0, 0);
+            }
 
             const double SlowingDistance = 100.0;
             double speed = Owner.MaxVelocity * Math.Min(1.0, distance / SlowingDistance);

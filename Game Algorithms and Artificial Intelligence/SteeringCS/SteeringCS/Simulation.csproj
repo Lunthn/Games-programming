@@ -50,8 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="behaviours\Arrive_Behaviour.cs" />
+    <Compile Include="behaviours\Seek_Behaviour.cs" />
     <Compile Include="behaviours\Seperation_Behaviour.cs" />
+    <Compile Include="behaviours\Wander_Behaviour.cs" />
     <Compile Include="util\Double_buffered_Panel.cs">
       <SubType>Component</SubType>
     </Compile>

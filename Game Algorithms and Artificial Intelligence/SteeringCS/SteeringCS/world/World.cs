@@ -13,7 +13,7 @@ namespace SteeringCS
         public int Width { get; private set; }
         public int Height { get; private set; }
         public bool IsPlaying { get; set; }
-        public Vector_2D TargetPosition { get; }
+        public Vector_2D TargetPosition { get; private set; }
 
         public List<Entity> Vehicles { get; private set; }
         public List<WorldObject> Objects { get; private set; }
@@ -78,7 +78,6 @@ namespace SteeringCS
 
             Vehicles = new List<Entity>();
             Objects = new List<WorldObject>();
-            TargetPosition = new Vector_2D(Width / 2, Height / 2);
         }
 
         private void BuildEntities(int count)
@@ -86,7 +85,7 @@ namespace SteeringCS
             lock (_syncLock)
             {
                 Vehicles.Clear();
-                SetTarget(Width / 2, Height / 2);
+                //SetTarget(Width / 2, Height / 2);
                 Random rng = new Random();
 
                 for (int i = 1; i <= count; i++)
@@ -95,7 +94,7 @@ namespace SteeringCS
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Entity v = new Entity(this, "Entity " + i, pos, vel) { ArriveTarget = TargetPosition };
+                    Entity v = new Entity(this, "Entity " + i, pos, vel) { ArriveTarget = null };
                     Vehicles.Add(v);
                 }
 
@@ -177,8 +176,15 @@ namespace SteeringCS
 
         public void SetTarget(int x, int y)
         {
+            if (TargetPosition == null)
+            {
+                TargetPosition = new Vector_2D(0, 0);
+            }
+
             TargetPosition.X = x;
             TargetPosition.Y = y;
+
+            foreach (Entity v in Vehicles) v.ArriveTarget = TargetPosition;
         }
 
         public void SetWorldSize(int w, int h)
@@ -212,12 +218,15 @@ namespace SteeringCS
             }
             catch { /* Ignore collection sync issues during render */ }
 
-            using (Pen pen = new Pen(Color.Black, 2))
+            if (TargetPosition != null)
             {
-                float x = (float)TargetPosition.X;
-                float y = (float)TargetPosition.Y;
-                g.DrawLine(pen, x - 5, y - 5, x + 5, y + 5);
-                g.DrawLine(pen, x + 5, y - 5, x - 5, y + 5);
+                using (Pen pen = new Pen(Color.Black, 2))
+                {
+                    float x = (float)TargetPosition.X;
+                    float y = (float)TargetPosition.Y;
+                    g.DrawLine(pen, x - 5, y - 5, x + 5, y + 5);
+                    g.DrawLine(pen, x + 5, y - 5, x - 5, y + 5);
+                }
             }
         }
     }

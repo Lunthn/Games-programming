@@ -22,7 +22,7 @@ namespace SteeringCS.entity
         public List<Steering_Behaviour> Behaviours { get; private set; }
         public Vector_2D AccelerationForRendering { get; private set; }
 
-        private readonly Arrive_Behaviour _arriveBehaviour;
+        private readonly Seek_Behaviour _arriveBehaviour;
 
         public Vector_2D ArriveTarget
         {
@@ -43,10 +43,10 @@ namespace SteeringCS.entity
             AccelerationForRendering = new Vector_2D();
             Behaviours = new List<Steering_Behaviour>();
 
-            _arriveBehaviour = new Arrive_Behaviour(this);
+            _arriveBehaviour = new Seek_Behaviour(this);
             Behaviours.Add(_arriveBehaviour);
-
             Behaviours.Add(new Seperation_Behaviour(this, MyWorld.Vehicles, DetectionRadius));
+            Behaviours.Add(new Wander_Behaviour(this));
         }
 
         public virtual void UpdateSimulation(double timeElapsedMs)
@@ -95,8 +95,8 @@ namespace SteeringCS.entity
                 new PointF((float)(Position.X + sideOffset.X + backOffset.X), (float)(Position.Y + sideOffset.Y + backOffset.Y)),
                 new PointF((float)(Position.X - sideOffset.X + backOffset.X), (float)(Position.Y - sideOffset.Y + backOffset.Y))
             };
-            Color primaryColor = Color.FromArgb(70, 130, 180);
-            Color outlineColor = Color.FromArgb(40, 44, 52);
+            Color primaryColor = Color.Green;
+            Color outlineColor = Color.Black;
 
             using (Brush fillBrush = new SolidBrush(primaryColor))
             {
