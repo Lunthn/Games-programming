@@ -20,14 +20,8 @@ namespace SteeringCS.behaviour
             Vector_2D delta = Vector_2D.Subtract(Target, Owner.Position);
             double distance = delta.Length();
 
-            if (distance <= 0)
-            {
-                // maybe set target to null here, so that the vehicle will stop seeking once it reaches/killed the target
-                return new Vector_2D(0, 0);
-            }
-
-            const double SlowingDistance = 100.0;
-            double speed = Owner.MaxVelocity * Math.Min(1.0, distance / SlowingDistance);
+            const double slowingDistance = 20.0;
+            double speed = Owner.MaxVelocity * Math.Min(1.0, distance / slowingDistance);
 
             Vector_2D desiredVelocity = delta.Clone();
             desiredVelocity.Scale_to_Length(speed);

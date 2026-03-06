@@ -12,8 +12,8 @@ namespace SteeringCS
         public const int RenderTimestepMs = 6;
         private bool _showInfoPanel = true;
 
-        private int _defaultEntities = 5;
-        private int _defaultObjects = 20;
+        private int _defaultEntities = 1;
+        private int _defaultTrees = 10;
 
         public Form1()
         {
@@ -37,7 +37,7 @@ namespace SteeringCS
         {
             this.WindowState = FormWindowState.Maximized;
             entityCountTextBox.Text = _defaultEntities.ToString();
-            _world.Populate(_defaultEntities, _defaultObjects);
+            _world.Populate(_defaultEntities, _defaultTrees);
             this.ActiveControl = null;
         }
 
@@ -122,7 +122,7 @@ namespace SteeringCS
                            $"R - Restart\n" +
                            $"P - Pause\n" +
                            $"D - Debug Info\n" +
-                           $"M - Hide (this) label\n" +
+                           $"M - Hide label\n" +
                            $"Click - Set Target \n";
         }
 

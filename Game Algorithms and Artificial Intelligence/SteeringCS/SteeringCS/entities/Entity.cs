@@ -22,12 +22,12 @@ namespace SteeringCS.entity
         public List<Steering_Behaviour> Behaviours { get; private set; }
         public Vector_2D AccelerationForRendering { get; private set; }
 
-        private readonly Seek_Behaviour _arriveBehaviour;
+        private readonly Seek_Behaviour _seekBehaviour;
 
         public Vector_2D ArriveTarget
         {
-            get => _arriveBehaviour.Target;
-            set => _arriveBehaviour.Target = value;
+            get => _seekBehaviour.Target;
+            set => _seekBehaviour.Target = value;
         }
 
         public Entity(World world, string name, Vector_2D pos, Vector_2D vel = null)
@@ -37,14 +37,14 @@ namespace SteeringCS.entity
             Position = pos.Clone();
             Velocity = vel?.Clone() ?? new Vector_2D();
             Direction = Velocity.Clone().Normalize();
-            DetectionRadius = 100;
+            DetectionRadius = 150;
 
             IsActive = true;
             AccelerationForRendering = new Vector_2D();
             Behaviours = new List<Steering_Behaviour>();
 
-            _arriveBehaviour = new Seek_Behaviour(this);
-            Behaviours.Add(_arriveBehaviour);
+            _seekBehaviour = new Seek_Behaviour(this);
+            Behaviours.Add(_seekBehaviour);
             Behaviours.Add(new Seperation_Behaviour(this, MyWorld.Vehicles, DetectionRadius));
             Behaviours.Add(new Wander_Behaviour(this));
         }
@@ -85,35 +85,48 @@ namespace SteeringCS.entity
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            Vector_2D head = Direction.Clone().Scale_to_Length(30);
-            Vector_2D sideOffset = Direction.Clone().Rotate_90_degrees_clockwise().Scale_to_Length(15);
-            Vector_2D backOffset = Direction.Clone().Scale_to_Length(-15);
+            float r = 12f;
+            RectangleF bodyRect = new RectangleF((float)Position.X - r, (float)Position.Y - r, r * 2, r * 2);
 
-            PointF[] bodyPoints =
-            {
-                new PointF((float)(Position.X + head.X), (float)(Position.Y + head.Y)),
-                new PointF((float)(Position.X + sideOffset.X + backOffset.X), (float)(Position.Y + sideOffset.Y + backOffset.Y)),
-                new PointF((float)(Position.X - sideOffset.X + backOffset.X), (float)(Position.Y - sideOffset.Y + backOffset.Y))
-            };
-            Color primaryColor = Color.Green;
-            Color outlineColor = Color.Black;
+            using (Brush fillBrush = new SolidBrush(Color.FromArgb(80, 120, 50)))
+                g.FillEllipse(fillBrush, bodyRect);
 
-            using (Brush fillBrush = new SolidBrush(primaryColor))
-            {
-                g.FillPolygon(fillBrush, bodyPoints);
-            }
+            using (Pen outlinePen = new Pen(Color.FromArgb(20, 40, 10), 2.5f))
+                g.DrawEllipse(outlinePen, bodyRect);
 
-            using (Pen softPen = new Pen(outlineColor, 3))
-            {
-                softPen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
-                g.DrawPolygon(softPen, bodyPoints);
-            }
+            Vector_2D nub = Direction.Clone().Scale_to_Length(r);
+            using (Pen nubPen = new Pen(Color.FromArgb(20, 40, 10), 2.5f) { EndCap = System.Drawing.Drawing2D.LineCap.Round })
+                g.DrawLine(nubPen,
+                    (float)Position.X, (float)Position.Y,
+                    (float)(Position.X + nub.X), (float)(Position.Y + nub.Y));
 
             if (ShowDebugInfo) RenderDebug(g);
         }
 
         private void RenderDebug(Graphics g)
         {
+            float dirAngle = (float)(Math.Atan2(Direction.Y, Direction.X) * 180.0 / Math.PI);
+            float sweepAngle = 70f;
+            float arcStartAngle = dirAngle - sweepAngle / 2f;
+
+            using (Brush visionBrush = new SolidBrush(Color.FromArgb(25, 180, 60, 0)))
+            {
+                using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                {
+                    path.AddPie(
+                        (float)(Position.X - DetectionRadius), (float)(Position.Y - DetectionRadius),
+                        DetectionRadius * 2, DetectionRadius * 2,
+                        arcStartAngle, sweepAngle);
+                    g.FillPath(visionBrush, path);
+                }
+            }
+
+            using (Pen visionPen = new Pen(Color.FromArgb(60, 180, 60, 0), 1f))
+                g.DrawArc(visionPen,
+                    (float)(Position.X - DetectionRadius), (float)(Position.Y - DetectionRadius),
+                    DetectionRadius * 2, DetectionRadius * 2,
+                    arcStartAngle, sweepAngle);
+
             foreach (var sb in Behaviours) sb.Render_for_Debug(g);
 
             const double velScale = 0.3;
