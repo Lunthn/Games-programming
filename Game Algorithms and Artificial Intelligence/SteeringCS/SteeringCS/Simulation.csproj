@@ -53,6 +53,9 @@
     <Compile Include="behaviours\Seek_Behaviour.cs" />
     <Compile Include="behaviours\Seperation_Behaviour.cs" />
     <Compile Include="behaviours\Wander_Behaviour.cs" />
+    <Compile Include="states\IdleState.cs" />
+    <Compile Include="states\IState.cs" />
+    <Compile Include="states\SeekingState.cs" />
     <Compile Include="util\Double_buffered_Panel.cs">
       <SubType>Component</SubType>
     </Compile>

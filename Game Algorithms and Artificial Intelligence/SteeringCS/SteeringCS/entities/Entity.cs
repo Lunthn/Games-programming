@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using SteeringCS.behaviour;
 using SteeringCS.behaviours;
+using SteeringCS.states;
 using SteeringCS.util;
 
 namespace SteeringCS.entity
@@ -12,56 +13,75 @@ namespace SteeringCS.entity
         public World MyWorld { get; set; }
         public Vector_2D Position { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
         public Vector_2D Direction { get; set; }
         public Vector_2D Velocity { get; set; }
-        public int DetectionRadius { get; set; }
+        public double Mass { get; set; }
+        public float Size { get; set; }
+        public int DetectionRadius { get; set; } = 150;
         public virtual double MaxVelocity { get; set; }
         public virtual double MinVelocity { get; set; }
-        public bool ShowDebugInfo { get; set; }
-        public List<Steering_Behaviour> Behaviours { get; private set; }
-        public Vector_2D AccelerationForRendering { get; private set; }
+        public bool ShowDebugInfo { get; set; } = false;
+        public Vector_2D AccelerationForRendering { get; private set; } = new Vector_2D();
+        public IState CurrentState { get; set; }
+        public List<Steering_Behaviour> Behaviours { get; private set; } = new List<Steering_Behaviour>();
 
         private readonly Seek_Behaviour _seekBehaviour;
+        private readonly Wander_Behaviour _wanderBehaviour;
+        private readonly Seperation_Behaviour _separationBehaviour;
 
-        public Vector_2D ArriveTarget
+        public Seek_Behaviour SeekBehaviour => _seekBehaviour;
+        public Wander_Behaviour WanderBehaviour => _wanderBehaviour;
+        public Seperation_Behaviour SeparationBehaviour => _separationBehaviour;
+
+        public Vector_2D FinalTarget
         {
             get => _seekBehaviour.Target;
             set => _seekBehaviour.Target = value;
         }
 
-        public Entity(World world, string name, Vector_2D pos, Vector_2D vel = null)
+        public Entity(World world, string name, Vector_2D pos, double mass, float size, Vector_2D vel = null)
         {
             MyWorld = world;
             Name = name;
             Position = pos.Clone();
             Velocity = vel?.Clone() ?? new Vector_2D();
             Direction = Velocity.Clone().Normalize();
-            DetectionRadius = 150;
-
-            IsActive = true;
-            AccelerationForRendering = new Vector_2D();
-            Behaviours = new List<Steering_Behaviour>();
+            Mass = mass;
+            Size = size;
 
             _seekBehaviour = new Seek_Behaviour(this);
+            _wanderBehaviour = new Wander_Behaviour(this);
+            _separationBehaviour = new Seperation_Behaviour(this, MyWorld.Entities, DetectionRadius);
+
             Behaviours.Add(_seekBehaviour);
-            Behaviours.Add(new Seperation_Behaviour(this, MyWorld.Vehicles, DetectionRadius));
-            Behaviours.Add(new Wander_Behaviour(this));
+            Behaviours.Add(_wanderBehaviour);
+            Behaviours.Add(_separationBehaviour);
+
+            ChangeState(new IdleState());
+        }
+
+        public void ChangeState(IState newState)
+        {
+            CurrentState?.Exit(this);
+            CurrentState = newState;
+            CurrentState?.Enter(this);
         }
 
         public virtual void UpdateSimulation(double timeElapsedMs)
         {
-            if (!IsActive) return;
+            CurrentState?.Execute(this);
 
             Vector_2D steeringForce = new Vector_2D();
 
             foreach (var behavior in Behaviours)
             {
-                steeringForce.Add(behavior.Calculate());
+                if (behavior.IsActive)
+                {
+                    steeringForce.Add(behavior.Calculate());
+                }
             }
 
-            const double mass = 30.0;
-            steeringForce.Divide(mass);
+            steeringForce.Divide(Mass);
             AccelerationForRendering = steeringForce.Clone();
 
             Velocity.Multiply(MyWorld.InertiaPercentage / 100.0);
@@ -76,16 +96,14 @@ namespace SteeringCS.entity
 
         public override string ToString()
         {
-            return $"{Name} Position:({Position.X:F1}, {Position.Y:F1}) Velocity:({Velocity.X:F1}, {Velocity.Y:F1})";
+            return $"{Name} Position:({Position.X:F1}, {Position.Y:F1}) Velocity:({Velocity.X:F1}, {Velocity.Y:F1}) Mass: {Mass:F1} Size: {Size:F1}";
         }
 
         public virtual void Render(Graphics g)
         {
-            if (!IsActive) return;
-
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            float r = 12f;
+            float r = Size;
             RectangleF bodyRect = new RectangleF((float)Position.X - r, (float)Position.Y - r, r * 2, r * 2);
 
             using (Brush fillBrush = new SolidBrush(Color.FromArgb(80, 120, 50)))
@@ -145,12 +163,18 @@ namespace SteeringCS.entity
             g.DrawString(ToString(), new Font(font, FontStyle.Bold), Brushes.Black, (float)Position.X, (float)Position.Y + yOffset);
             yOffset += 15;
 
+            g.DrawString($"{CurrentState.GetType().Name}", new Font(font, FontStyle.Bold), Brushes.Black, (float)Position.X, (float)Position.Y + yOffset);
+            yOffset += 15;
+
             g.DrawString("Active Behaviours:", new Font(font, FontStyle.Bold), Brushes.Black, (float)Position.X, (float)Position.Y + yOffset);
 
             foreach (var behavior in Behaviours)
             {
-                yOffset += 15;
-                g.DrawString($"- {behavior.GetType().Name}", font, Brushes.DarkSlateGray, (float)Position.X, (float)Position.Y + yOffset);
+                if (behavior.IsActive)
+                {
+                    yOffset += 15;
+                    g.DrawString($"- {behavior.GetType().Name}", font, Brushes.DarkSlateGray, (float)Position.X, (float)Position.Y + yOffset);
+                }
             }
         }
     }

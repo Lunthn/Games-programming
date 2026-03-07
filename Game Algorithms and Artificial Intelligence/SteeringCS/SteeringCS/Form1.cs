@@ -45,7 +45,7 @@ namespace SteeringCS
         {
             Invalidate();
             _world.SetWorldSize(dbPanel1.Width, dbPanel1.Height);
-            _world.ResetPositions(_world.Vehicles.Count);
+            _world.ResetPositions(_world.Entities.Count);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -90,7 +90,7 @@ namespace SteeringCS
                 }
                 else
                 {
-                    entityCountTextBox.Text = _world.Vehicles.Count.ToString();
+                    entityCountTextBox.Text = _world.Entities.Count.ToString();
                 }
                 this.ActiveControl = null;
                 e.Handled = true;
@@ -115,7 +115,7 @@ namespace SteeringCS
 
         private void UpdateInfoLabel()
         {
-            infoLabel.Text = $"Entities: {_world.Vehicles.Count}\n" +
+            infoLabel.Text = $"Entities: {_world.Entities.Count}\n" +
                            $"Status: {(_world.IsPlaying ? "Playing" : "Paused")}\n" +
                            $"Debug: {(_world.ShowDebugInfo ? "On" : "Off")}\n" +
                            $"\nControls\n" +

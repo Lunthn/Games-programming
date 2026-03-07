@@ -13,9 +13,9 @@ namespace SteeringCS
         public int Width { get; private set; }
         public int Height { get; private set; }
         public bool IsPlaying { get; set; }
-        public Vector_2D TargetPosition { get; private set; }
+        public Vector_2D FinalTarget { get; private set; }
 
-        public List<Entity> Vehicles { get; private set; }
+        public List<Entity> Entities { get; private set; }
         public List<WorldObject> Objects { get; private set; }
 
         private readonly object _syncLock = new object();
@@ -40,7 +40,7 @@ namespace SteeringCS
             {
                 if (value < _minVelocity) return;
                 _maxVelocity = value;
-                Vehicles.ForEach(v => v.MaxVelocity = value);
+                Entities.ForEach(v => v.MaxVelocity = value);
             }
         }
 
@@ -53,7 +53,7 @@ namespace SteeringCS
             {
                 if (value > _maxVelocity || value < 0) return;
                 _minVelocity = value;
-                Vehicles.ForEach(v => v.MinVelocity = value);
+                Entities.ForEach(v => v.MinVelocity = value);
             }
         }
 
@@ -65,7 +65,7 @@ namespace SteeringCS
             set
             {
                 _showDebugInfo = value;
-                Vehicles.ForEach(v => v.ShowDebugInfo = value);
+                Entities.ForEach(v => v.ShowDebugInfo = value);
             }
         }
 
@@ -76,7 +76,7 @@ namespace SteeringCS
             Width = width;
             Height = height;
 
-            Vehicles = new List<Entity>();
+            Entities = new List<Entity>();
             Objects = new List<WorldObject>();
         }
 
@@ -84,17 +84,21 @@ namespace SteeringCS
         {
             lock (_syncLock)
             {
-                Vehicles.Clear();
+                Entities.Clear();
                 Random rng = new Random();
 
                 for (int i = 1; i <= count; i++)
                 {
                     Vector_2D pos = new Vector_2D(Width * rng.NextDouble(), Height * rng.NextDouble());
+
+                    double mass = (rng.NextDouble() * 25 + 15);
+                    float size = (float)(mass / 2);
+
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Entity v = new Entity(this, "Entity " + i, pos, vel);
-                    Vehicles.Add(v);
+                    Entity v = new Entity(this, "Zombie " + i, pos, mass, size, vel);
+                    Entities.Add(v);
                 }
 
                 MinVelocity = _minVelocity;
@@ -128,7 +132,7 @@ namespace SteeringCS
         {
             lock (_syncLock)
             {
-                foreach (Entity v in Vehicles) v.UpdateSimulation(_updateTimeStepMs);
+                foreach (Entity v in Entities) v.UpdateSimulation(_updateTimeStepMs);
             }
         }
 
@@ -175,15 +179,15 @@ namespace SteeringCS
 
         public void SetTarget(int x, int y)
         {
-            if (TargetPosition == null)
+            if (FinalTarget == null)
             {
-                TargetPosition = new Vector_2D(0, 0);
+                FinalTarget = new Vector_2D(0, 0);
             }
 
-            TargetPosition.X = x;
-            TargetPosition.Y = y;
+            FinalTarget.X = x;
+            FinalTarget.Y = y;
 
-            foreach (Entity v in Vehicles) v.ArriveTarget = TargetPosition;
+            foreach (Entity v in Entities) v.FinalTarget = FinalTarget;
         }
 
         public void SetWorldSize(int w, int h)
@@ -212,17 +216,17 @@ namespace SteeringCS
         {
             try
             {
-                foreach (Entity v in Vehicles) v.Render(g);
+                foreach (Entity v in Entities) v.Render(g);
                 foreach (WorldObject w in Objects) w.Render(g);
             }
             catch { /* Ignore collection sync issues during render */ }
 
-            if (TargetPosition != null)
+            if (FinalTarget != null)
             {
                 using (Pen pen = new Pen(Color.Black, 2))
                 {
-                    float x = (float)TargetPosition.X;
-                    float y = (float)TargetPosition.Y;
+                    float x = (float)FinalTarget.X;
+                    float y = (float)FinalTarget.Y;
                     g.DrawLine(pen, x - 5, y - 5, x + 5, y + 5);
                     g.DrawLine(pen, x + 5, y - 5, x - 5, y + 5);
                 }

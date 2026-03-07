@@ -5,7 +5,7 @@ using SteeringCS.util;
 
 namespace SteeringCS.behaviour
 {
-    internal class Seek_Behaviour : Steering_Behaviour
+    public class Seek_Behaviour : Steering_Behaviour
     {
         public Vector_2D Target { get; set; }
 

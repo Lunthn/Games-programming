@@ -7,10 +7,12 @@ namespace SteeringCS
     public abstract class Steering_Behaviour
     {
         public Entity Owner { get; set; }
+        public bool IsActive { get; set; }
 
         public Steering_Behaviour(Entity v)
         {
             Owner = v;
+            IsActive = false;
         }
 
         public virtual void Render_for_Debug(Graphics g)
