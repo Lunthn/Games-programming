@@ -29,11 +29,7 @@ namespace SteeringCS.states
             double distance = Vector_2D.Distance(entity.Position, entity.FinalTarget);
             if (distance < 20.0)
             {
-                // all entities to idle, because target is dead
-                foreach (Entity e in entity.MyWorld.Entities)
-                {
-                    e.ChangeState(new IdleState());
-                }
+                entity.FinalTarget = null;
             }
         }
 
