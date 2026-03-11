@@ -36,7 +36,10 @@ namespace SteeringCS
         private void Form1_Load(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;
+
             entityCountTextBox.Text = _defaultEntities.ToString();
+            dbPanel1.BackColor = System.Drawing.Color.Gray;
+
             _world.Populate(_defaultEntities, _defaultTrees);
             this.ActiveControl = null;
         }
@@ -77,6 +80,10 @@ namespace SteeringCS
                 else this.infoPanel.Show();
 
                 _showInfoPanel = !_showInfoPanel;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                Application.Exit();
             }
         }
 
