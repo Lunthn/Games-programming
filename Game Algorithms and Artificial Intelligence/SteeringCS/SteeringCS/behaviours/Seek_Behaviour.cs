@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using SteeringCS.entity;
+using SteeringCS.entities;
 using SteeringCS.util;
 
 namespace SteeringCS.behaviour
@@ -9,7 +9,7 @@ namespace SteeringCS.behaviour
     {
         public Vector_2D Target { get; set; }
 
-        public Seek_Behaviour(Entity me) : base(me)
+        public Seek_Behaviour(Zombie me) : base(me)
         {
         }
 

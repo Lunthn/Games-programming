@@ -1,4 +1,4 @@
-using SteeringCS.entity;
+using SteeringCS.entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace SteeringCS.behaviours
         private static readonly Random _random = new Random();
         private double _wanderAngle;
 
-        public Wander_Behaviour(Entity me) : base(me)
+        public Wander_Behaviour(Zombie me) : base(me)
         {
             _wanderAngle = _random.NextDouble() * 360;
         }

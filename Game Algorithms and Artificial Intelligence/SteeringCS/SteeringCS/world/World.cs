@@ -1,4 +1,4 @@
-﻿using SteeringCS.entity;
+﻿using SteeringCS.entities;
 using SteeringCS.util;
 using SteeringCS.world;
 using System;
@@ -15,7 +15,7 @@ namespace SteeringCS
         public bool IsPlaying { get; set; }
         public Vector_2D FinalTarget { get; private set; }
 
-        public List<Entity> Entities { get; private set; }
+        public List<Zombie> Entities { get; private set; }
         public List<WorldObject> Objects { get; private set; }
 
         private readonly object _syncLock = new object();
@@ -76,7 +76,7 @@ namespace SteeringCS
             Width = width;
             Height = height;
 
-            Entities = new List<Entity>();
+            Entities = new List<Zombie>();
             Objects = new List<WorldObject>();
         }
 
@@ -97,7 +97,7 @@ namespace SteeringCS
                     Vector_2D vel = new Vector_2D(1, 0).Multiply(100);
                     vel.Rotate_degrees(rng.NextDouble() * 90 - 45);
 
-                    Entity v = new Entity(this, "Zombie " + i, pos, mass, size, vel);
+                    Zombie v = new Zombie(this, "Zombie " + i, pos, mass, size, vel);
                     Entities.Add(v);
                 }
 
@@ -132,7 +132,7 @@ namespace SteeringCS
         {
             lock (_syncLock)
             {
-                foreach (Entity v in Entities) v.UpdateSimulation(_updateTimeStepMs);
+                foreach (Zombie v in Entities) v.UpdateSimulation(_updateTimeStepMs);
             }
         }
 
@@ -187,7 +187,7 @@ namespace SteeringCS
             FinalTarget.X = x;
             FinalTarget.Y = y;
 
-            foreach (Entity v in Entities) v.FinalTarget = FinalTarget;
+            foreach (Zombie v in Entities) v.FinalTarget = FinalTarget;
         }
 
         public void SetWorldSize(int w, int h)
@@ -216,7 +216,7 @@ namespace SteeringCS
         {
             try
             {
-                foreach (Entity v in Entities) v.Render(g);
+                foreach (Zombie v in Entities) v.Render(g);
                 foreach (WorldObject w in Objects) w.Render(g);
             }
             catch { /* Ignore collection sync issues during render */ }

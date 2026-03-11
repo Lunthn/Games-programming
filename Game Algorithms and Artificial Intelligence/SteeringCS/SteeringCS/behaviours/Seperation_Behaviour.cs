@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using SteeringCS.entity;
+using SteeringCS.entities;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace SteeringCS.behaviours
 {
     public class Seperation_Behaviour : Steering_Behaviour
     {
-        public List<Entity> Neighbours { get; set; }
+        public List<Zombie> Neighbours { get; set; }
         private int _seperationRadius;
         private double _separationStrength;
 
-        public Seperation_Behaviour(Entity owner, List<Entity> neighbours, int detectionRadius) : base(owner)
+        public Seperation_Behaviour(Zombie owner, List<Zombie> neighbours, int detectionRadius) : base(owner)
         {
             this.Neighbours = neighbours;
             this._seperationRadius = detectionRadius;

@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.states
 {
-    public class SeekingState : IState
+    public class InvestigatingState : IState
     {
         public void Enter(Zombie entity)
         {
-            entity.WanderBehaviour.IsActive = false;
             entity.SeekBehaviour.IsActive = true;
+            entity.WanderBehaviour.IsActive = true;
             entity.SeparationBehaviour.IsActive = true;
+
+            entity.MaxVelocity /= 2;
         }
 
         public void Execute(Zombie entity)
@@ -27,14 +29,16 @@ namespace SteeringCS.states
             }
 
             double distance = Vector_2D.Distance(entity.Position, entity.FinalTarget);
-            if (distance < 20.0)
+
+            if (entity.DetectionRadius >= distance)
             {
-                entity.FinalTarget = null;
+                entity.ChangeState(new SeekingState());
             }
         }
 
         public void Exit(Zombie entity)
         {
+            entity.MaxVelocity *= 2;
         }
     }
 }

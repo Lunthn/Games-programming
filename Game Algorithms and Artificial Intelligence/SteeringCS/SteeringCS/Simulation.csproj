@@ -53,13 +53,16 @@
     <Compile Include="behaviours\Seek_Behaviour.cs" />
     <Compile Include="behaviours\Seperation_Behaviour.cs" />
     <Compile Include="behaviours\Wander_Behaviour.cs" />
+    <Compile Include="entities\Entity.cs" />
+    <Compile Include="entities\Player.cs" />
     <Compile Include="states\IdleState.cs" />
+    <Compile Include="states\InvestigatingState.cs" />
     <Compile Include="states\IState.cs" />
     <Compile Include="states\SeekingState.cs" />
     <Compile Include="util\Double_buffered_Panel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="entities\Entity.cs" />
+    <Compile Include="entities\Zombie.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

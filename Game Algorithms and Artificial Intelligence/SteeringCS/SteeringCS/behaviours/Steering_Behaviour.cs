@@ -1,4 +1,4 @@
-﻿using SteeringCS.entity;
+﻿using SteeringCS.entities;
 using System;
 using System.Drawing;
 
@@ -6,10 +6,10 @@ namespace SteeringCS
 {
     public abstract class Steering_Behaviour
     {
-        public Entity Owner { get; set; }
+        public Zombie Owner { get; set; }
         public bool IsActive { get; set; }
 
-        public Steering_Behaviour(Entity v)
+        public Steering_Behaviour(Zombie v)
         {
             Owner = v;
             IsActive = false;

@@ -1,4 +1,4 @@
-﻿using SteeringCS.entity;
+﻿using SteeringCS.entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace SteeringCS.states
 {
     public interface IState
     {
-        void Enter(Entity entity);
+        void Enter(Zombie entity);
 
-        void Execute(Entity entity);
+        void Execute(Zombie entity);
 
-        void Exit(Entity entity);
+        void Exit(Zombie entity);
     }
 }

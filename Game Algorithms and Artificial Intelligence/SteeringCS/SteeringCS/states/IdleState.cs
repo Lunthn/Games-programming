@@ -1,4 +1,4 @@
-﻿using SteeringCS.entity;
+﻿using SteeringCS.entities;
 using SteeringCS.behaviour;
 using SteeringCS.behaviours;
 using System;
@@ -11,7 +11,7 @@ namespace SteeringCS.states
 {
     public class IdleState : IState
     {
-        public void Enter(Entity entity)
+        public void Enter(Zombie entity)
         {
             entity.FinalTarget = null;
 
@@ -20,15 +20,15 @@ namespace SteeringCS.states
             entity.SeparationBehaviour.IsActive = true;
         }
 
-        public void Execute(Entity entity)
+        public void Execute(Zombie entity)
         {
             if (entity.FinalTarget != null)
             {
-                entity.ChangeState(new SeekingState());
+                entity.ChangeState(new InvestigatingState());
             }
         }
 
-        public void Exit(Entity entity)
+        public void Exit(Zombie entity)
         {
         }
     }
